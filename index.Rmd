@@ -12,21 +12,23 @@ library(flexdashboard)
 
 ```{r paquetes}
 library(dplyr)
+library(sf)
+library(DT)
 ```
 
 ```{r datos}
 # Lectura de un archivo CSV con registros de presencia de felinos en Costa Rica
 proyectos <-
   st_read(
-    "/vsicurl/https://raw.githubusercontent.com/tpb728O-programaciongeoespacialr/2021ii/main/datos/gbif/felidae.csv",
+    "/vsicurl/https://raw.githubusercontent.com/cartera-verde-dcc/cartera-verde-dcc.github.io/master/datos/proyectos.csv",
     options = c(
-      "X_POSSIBLE_NAMES=decimalLongitude",
-      "Y_POSSIBLE_NAMES=decimalLatitude"
+      "X_POSSIBLE_NAMES=c031",
+      "Y_POSSIBLE_NAMES=c032"
     ),
     quiet = TRUE
   )
-# Asignación de un CRS al objeto felidae
-st_crs(felidae) <- 4326
+# Asignación de CRS
+st_crs(proyectos) <- 4326
 ```
 
 Column {data-width=650}
@@ -35,7 +37,8 @@ Column {data-width=650}
 ### Chart A
 
 ```{r}
-
+proyectos %>%
+  st_d
 ```
 
 Column {data-width=350}
