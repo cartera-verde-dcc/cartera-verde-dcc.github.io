@@ -10,3 +10,5 @@ Los programas reciben como entrada un archivo CSV, el cual se generó a partir d
 - El archivo Excel se abrió en LibreOffice Calc.
 - Con la opción de menú **File | Save As...**, el archivo se guardó en formato CSV con el nombre `datos/proyectos.csv` (*Edit Filter Settings = Character set:Unicode(UTF-8) Field delimiter:, String delimiter:" Save content cell as shown*).
 - Se eliminaron las tres primeras filas (incluyendo la que tiene los encabezados) y se guardó nuevamente el archivo.
+
+Al cargar `datos/proyectos.csv` en un dataframe de R, puede verse que tiene **200 filas y 121 columnas**.
