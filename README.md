@@ -8,5 +8,5 @@ Los programas reciben como entrada un archivo CSV, el cual se generó a partir d
 
 ### Procedimiento para generar el archivo CSV
 - El archivo se abrió en LibreOffice Calc.
-- Con la opción de menú **File | Save As...**, el archivo se guardó en formato CSV con el nombre `datos/proyectos.csv` (Edit Filter Settings = Character set:Unicode(UTF-8) Field delimiter:, String delimiter:" Save content cell as shown).
+- Con la opción de menú **File | Save As...**, el archivo se guardó en formato CSV con el nombre `datos/proyectos.csv` (*Edit Filter Settings = Character set:Unicode(UTF-8) Field delimiter:, String delimiter:" Save content cell as shown*).
 - Se eliminaron las tres primeras filas (incluyendo la que tiene los encabezados) y se guardó nuevamente el archivo.
