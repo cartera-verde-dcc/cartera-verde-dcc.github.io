@@ -12,7 +12,7 @@ El archivo Excel tiene **200 filas y 121 columnas** de datos.
 - El archivo Excel se abrió en LibreOffice Calc.
 - Con la opción de menú **File | Save As...**, el archivo se guardó en formato CSV con el nombre `datos/proyectos.csv` (*Edit Filter Settings = Character set:Unicode(UTF-8) Field delimiter:, String delimiter:" Save content cell as shown*).
 - Se eliminaron las tres primeras filas (incluyendo la que tiene los encabezados) y se guardó nuevamente el archivo.
-- En la fila 10, columna 32 y en la fila 133, columna 32 se cambió una coma por un punto.
+- En la fila 10, columna 32; fila 133, columna 32 y fila 135, columna 32 se cambió una coma por un punto.
 
 Para asignar nombres temporales a las 121 columnas, se abrió con un editor de texto el archivo `datos/proyectos.csv` y se insertó al principio la línea:
 
