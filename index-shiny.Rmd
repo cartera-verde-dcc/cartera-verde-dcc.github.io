@@ -4,29 +4,11 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+runtime: shiny    
 ---
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
-```
-
-```{r paquetes}
-library(dplyr)
-```
-
-```{r datos}
-# Lectura de un archivo CSV con registros de presencia de felinos en Costa Rica
-proyectos <-
-  st_read(
-    "/vsicurl/https://raw.githubusercontent.com/tpb728O-programaciongeoespacialr/2021ii/main/datos/gbif/felidae.csv",
-    options = c(
-      "X_POSSIBLE_NAMES=decimalLongitude",
-      "Y_POSSIBLE_NAMES=decimalLatitude"
-    ),
-    quiet = TRUE
-  )
-# Asignación de un CRS al objeto felidae
-st_crs(felidae) <- 4326
 ```
 
 Column {data-width=650}
