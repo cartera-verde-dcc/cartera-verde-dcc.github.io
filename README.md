@@ -1,6 +1,6 @@
 # Sitio web del proyecto "Cartera verde de proyectos financiables alineados con la NDC"
 
-## Procesamiento de los datos de entrada
+## Proyectos
 Los programas reciben como entrada un archivo CSV, el cual se generó a partir de un archivo Excel llamado `datos/PRODUCTO 3 BASE DE DATOS de Proyectos Verdes MANUEL VARGAS.xlsx`. Este archivo Excel proviene de una exportación de los datos recolectados mediante un formulario Google Forms. Tiene dos filas en blanco al inicio. En la fila 3, hay solamente tres columnas con encabezado:
 - AE (31): "Latitud"
 - AF (32): "Longitud"
@@ -24,3 +24,12 @@ Para asignar nombres temporales a las 121 columnas, se abrió con un editor de t
 Además,
 
 - ¿Cuáles columnas debe incluírse?
+
+## Cantones
+```shell
+$ ogr2ogr \
+    -simplify 100 \
+    -makevalid \
+    cantones-simplificadas_100m.geojson \
+    WFS:"http://geos.snitcr.go.cr/be/IGN_5/wfs" "IGN_5:limitecantonal_5k" 
+```
