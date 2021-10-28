@@ -20,3 +20,7 @@ Para asignar nombres temporales a las 121 columnas, se abrió con un editor de t
 
 ### Aspectos para revisar
 - En `datos/proyectos.csv` hay tres filas para `(cedula, canton)` = `(3002045043, "Asociación Centro Científico Tropical")`.
+
+Además,
+
+- ¿Cuáles columnas debe incluírse?
