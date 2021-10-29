@@ -12,47 +12,220 @@ library(flexdashboard)
 
 ```{r paquetes}
 library(dplyr)
+library(tidyr)
+library(stringr)
 library(sf)
 library(DT)
+library(plotly)
+library(leaflet)
+library(leaflet.extras)
+library(leafem)
 ```
 
 ```{r datos}
-# Lectura de un archivo CSV con registros de presencia de felinos en Costa Rica
+# Lectura de una capa vectorial (GeoJSON) de cantones de Costa Rica
+cantones <-
+  st_read(
+    "https://raw.githubusercontent.com/cartera-verde-dcc/cartera-verde-dcc.github.io/master/datos/cantones-simplificadas_100m.geojson",
+    quiet = TRUE
+  )
+# Transformación del CRS del objeto cantones
+cantones <-
+  cantones %>%
+  st_transform(4326)
+
+# Lectura de un archivo CSV con datos de los proyectos y coordendas de las oficinas centrales
 proyectos <-
   st_read(
     "/vsicurl/https://raw.githubusercontent.com/cartera-verde-dcc/cartera-verde-dcc.github.io/master/datos/proyectos.csv",
-    options = c(
-      "X_POSSIBLE_NAMES=c031",
-      "Y_POSSIBLE_NAMES=c032"
-    ),
+    options = c("X_POSSIBLE_NAMES=c032",
+                "Y_POSSIBLE_NAMES=c031"),
     quiet = TRUE
   )
 # Asignación de CRS
 st_crs(proyectos) <- 4326
+
+# Renombramiento de columnas
+proyectos <-
+  proyectos %>%
+  rename(nombre = c005) %>%
+  rename(cedula = c007) %>%
+  rename(web = c020) %>%
+  rename(latitud = c031) %>%
+  rename(longitud = c032) %>%
+  rename(cantones = c041)
+
+# Limpieza de datos
+proyectos <-
+  proyectos %>%
+  filter(nombre != "") %>%
+  mutate(cantones = str_replace_all(cantones, fixed("Perez Zeledón"), "Pérez Zeledón")) %>%
+  mutate(cantones = str_replace_all(cantones, fixed("Talmanca"), "Talamanca")) %>%
+  mutate(cantones = str_trim(cantones, side = "both")) %>%
+  mutate(cantones = str_squish(cantones))
+
+# Data frame proyectos_cantones
+proyectos_cantones <-
+  proyectos %>%
+  st_drop_geometry() %>%
+  select(cedula, cantones) %>%
+  filter(cantones != "") %>%
+  mutate(cantones = str_replace_all(cantones, fixed(", "), ",")) %>%
+  mutate(cantones = strsplit(as.character(cantones), ",")) %>%
+  unnest(cantones) %>%
+  rename(canton = cantones)
+
+# Data frame proyectos_cantones_conteo
+proyectos_cantones_conteo <-
+  proyectos_cantones %>%
+  group_by(canton) %>%
+  summarize(cantidad_proyectos = n())
+
+# Join de cantones con proyecto_cantones_conteo
+cantones <- left_join(cantones, proyectos_cantones_conteo)
+
+# Reemplazo de NA
+cantones <-
+  cantones %>%
+  mutate(cantidad_proyectos = ifelse(is.na(cantidad_proyectos), 0, cantidad_proyectos))
 ```
 
-Column {data-width=650}
+Column {data-width=500}
 -----------------------------------------------------------------------
 
-### Chart A
+### Proyectos por cantón y oficinas centrales de los proyectos
 
-```{r}
+```{r mapa}
+bins_cantidad_proyectos <- c(0, 5, 10, 15, Inf)
+
+etiquetas_cantidad_proyectos <- c("<5", ">5-10", ">10-15", ">15")
+
+pal_cantidad_proyectos <-
+  colorBin(bins = bins_cantidad_proyectos,
+           palette = c("#f1eef6", "#d7b5d8", "#df65b0", "#ce1256"))
+
+leaflet() %>%
+  setView(lng = -84.19452,
+          lat = 9.572735,
+          zoom = 8) %>%
+  addTiles(group = "OpenStreetMap") %>%
+  addProviderTiles(providers$Stamen.TonerLite, group = "Stamen Toner Lite") %>%
+  addProviderTiles(providers$CartoDB.DarkMatter, group = "CartoDB Dark Matter") %>%
+  addProviderTiles(providers$Esri.WorldImagery, group = "Imágenes de ESRI") %>%
+  addPolygons(
+    data = cantones,
+    group = "Cantones",
+    color = "black",
+    stroke = TRUE,
+    weight = 1.0,
+    fillColor = ~ pal_cantidad_proyectos(cantidad_proyectos),
+    fillOpacity = 0.8,
+    popup = paste0(
+      "<strong>Cantón: </strong>",
+      cantones$canton,
+      "<br>",
+      "<strong>Cantidad de proyectos: </strong>",
+      cantones$cantidad_proyectos
+    )
+  ) %>%
+  addLegend(
+    position = "bottomright",
+    pal = pal_cantidad_proyectos,
+    values = cantones$cantidad_proyectos,
+    labFormat = function(type, cuts, p) {
+      paste0(etiquetas_cantidad_proyectos)
+    },
+    group = "Cantones",
+    title = "Cantidad de proyectos"
+  ) %>%
+  addCircleMarkers(
+    data = proyectos,
+    group = "Oficinas centrales",
+    fillColor = 'red',
+    fillOpacity = 1,
+    stroke = TRUE,
+    radius = 4,
+    popup = paste0(
+      "<strong>Proyecto: </strong>",
+      if_else(
+        proyectos$web == "N/A",
+        proyectos$nombre,
+        paste0('<a href="', proyectos$web, '">', proyectos$nombre, "</a>")
+      ),
+      if_else(
+        proyectos$cantones != "",
+        paste0("<br><strong>Cantones en los que trabaja: </strong>", proyectos$cantones),
+        ""
+      )      
+    )
+  ) %>%
+  addLayersControl(
+    baseGroups = c(
+      "OpenStreetMap",
+      "Stamen Toner Lite",
+      "CartoDB Dark Matter",
+      "Imágenes de ESRI"
+    ),
+    overlayGroups = c("Cantones", "Oficinas centrales")
+  ) %>%
+  addScaleBar(position = "bottomleft",
+              options = scaleBarOptions(imperial = FALSE)) %>%
+  addMouseCoordinates() %>%
+  addSearchOSM() %>%
+  addResetMapButton()
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Proyectos
+
+```{r tabla-proyectos}
 proyectos %>%
-  st_d
+  st_drop_geometry() %>%
+  select(nombre, cantones) %>%
+  datatable(
+    rownames = FALSE,
+    colnames = c("Proyecto", "Cantones en los que trabaja"),
+    extensions = c("Buttons"),
+    options = list(
+      searchHighlight = TRUE,
+      lengthMenu = list(c(10, 15, 25, 50, 100, -1), c(10, 15, 25, 50, 100, "Todos")),
+      dom = 'Bfrtlip',
+      language = list(url = "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json"),
+                           buttons = list(list(extend='copy', text='Copiar'),
+                                          list(extend='csv', text='CSV'),
+                                          list(extend='csv', text='Excel'),
+                                          list(extend='pdf', text='PDF')
+                                          )      
+    )
+  )
 ```
 
-Column {data-width=350}
------------------------------------------------------------------------
+### Cantidad de proyectos por cantón
 
-### Chart B
-
-```{r}
-
-```
-
-### Chart C
-
-```{r}
-
+```{r grafico-proyectos_x_canton}
+cantones %>%
+  st_drop_geometry() %>%
+  top_n(n = 10, wt = cantidad_proyectos) %>%
+  mutate(canton = factor(canton, levels = unique(canton)[order(cantidad_proyectos, decreasing = TRUE)])) %>%
+  filter(cantidad_proyectos >= 1) %>%
+  arrange(desc(cantidad_proyectos)) %>%
+  plot_ly(
+    x = ~ canton,
+    y = ~ cantidad_proyectos,
+    type = "bar",
+    name = "Proyectos",
+    text = ~ cantidad_proyectos,
+    textposition = 'auto',
+    marker = list(color = "blue")
+  ) %>%
+  layout(
+    yaxis = list(title = "Cantidad de proyectos"),
+    xaxis = list(title = "Cantones"),
+    barmode = 'group',
+    hovermode = "compare"
+  ) %>%
+  config(locale = 'es')  
 ```
 
