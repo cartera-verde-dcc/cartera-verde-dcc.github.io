@@ -207,9 +207,9 @@ proyectos %>%
 ```{r grafico-proyectos_x_canton}
 cantones %>%
   st_drop_geometry() %>%
+  filter(cantidad_proyectos >= 1) %>%  
   top_n(n = 10, wt = cantidad_proyectos) %>%
   mutate(canton = factor(canton, levels = unique(canton)[order(cantidad_proyectos, decreasing = TRUE)])) %>%
-  filter(cantidad_proyectos >= 1) %>%
   arrange(desc(cantidad_proyectos)) %>%
   plot_ly(
     x = ~ canton,
