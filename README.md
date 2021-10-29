@@ -24,6 +24,7 @@ Para asignar nombres temporales a las 121 columnas, se abrió con un editor de t
 - Se reemplazó "Talmanca" con "Talamanca".
 
 ### Pendientes
+- Monteverde no está en el mapa de cantones del IGN.
 - En `datos/proyectos.csv` hay tres filas para `(cedula, nombre)` = `(3002045043, "Asociación Centro Científico Tropical")`.
 
 Además,
