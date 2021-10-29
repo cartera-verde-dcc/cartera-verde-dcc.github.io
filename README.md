@@ -28,7 +28,7 @@ Para asignar nombres temporales a las 121 columnas, se abrió con un editor de t
 
 Además,
 
-- ¿Cuáles columnas debe incluírse?
+- ¿Cuáles columnas debe incluírse en el conjunto de datos?
 
 ## Cantones
 ```shell
