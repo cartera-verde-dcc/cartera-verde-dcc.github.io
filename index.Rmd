@@ -53,7 +53,8 @@ proyectos <-
   rename(web = c020) %>%
   rename(latitud = c031) %>%
   rename(longitud = c032) %>%
-  rename(cantones = c041)
+  rename(cantones = c041) %>%
+  rename(area_accionclimatica = c042)
 
 # Limpieza de datos
 proyectos <-
@@ -62,7 +63,8 @@ proyectos <-
   mutate(cantones = str_replace_all(cantones, fixed("Perez Zeledón"), "Pérez Zeledón")) %>%
   mutate(cantones = str_replace_all(cantones, fixed("Talmanca"), "Talamanca")) %>%
   mutate(cantones = str_trim(cantones, side = "both")) %>%
-  mutate(cantones = str_squish(cantones))
+  mutate(cantones = str_squish(cantones)) %>%
+  mutate(area_accionclimatica = str_replace_all(area_accionclimatica, fixed("_"), " "))  
 
 # Data frame proyectos_cantones
 proyectos_cantones <-
@@ -156,7 +158,10 @@ leaflet() %>%
         proyectos$cantones != "",
         paste0("<br><strong>Cantones en los que trabaja: </strong>", proyectos$cantones),
         ""
-      )      
+      ),
+      "<br>",
+      "<strong>Área de acción climática: </strong>",
+      proyectos$area_accionclimatica
     )
   ) %>%
   addLayersControl(
@@ -183,10 +188,10 @@ Column {data-width=500}
 ```{r tabla-proyectos}
 proyectos %>%
   st_drop_geometry() %>%
-  select(nombre, cantones) %>%
+  select(nombre, cantones, area_accionclimatica) %>%
   datatable(
     rownames = FALSE,
-    colnames = c("Proyecto", "Cantones en los que trabaja"),
+    colnames = c("Proyecto", "Cantones en los que trabaja", "Área de acción climática"),
     extensions = c("Buttons"),
     options = list(
       searchHighlight = TRUE,
