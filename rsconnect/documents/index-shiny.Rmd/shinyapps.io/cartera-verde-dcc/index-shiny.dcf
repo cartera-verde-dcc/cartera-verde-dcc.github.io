@@ -5,9 +5,9 @@ account: cartera-verde-dcc
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4974204
-bundleId: 5214829
+bundleId: 5214887
 url: https://cartera-verde-dcc.shinyapps.io/index-shiny/
-when: 1636064669.91962
-lastSyncTime: 1636064669.91966
+when: 1636065781.28387
+lastSyncTime: 1636065781.28389
 asMultiple: FALSE
 asStatic: FALSE
