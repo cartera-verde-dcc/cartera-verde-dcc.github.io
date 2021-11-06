@@ -54,6 +54,8 @@ Además,
 
 ### cantones.geojson
 ```shell
+cd datos
+
 ogr2ogr \
   -simplify 100 \
   -makevalid \
@@ -63,6 +65,8 @@ ogr2ogr \
 
 ### regiones-socioeconomicas.geojson
 ```shell
+cd datos
+
 # Borrado de archivos generados en ejecuciones anteriores
 rm regiones-socioeconomicas-simplificadas_100m.geojson
 
