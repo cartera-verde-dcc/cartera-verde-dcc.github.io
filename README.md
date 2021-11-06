@@ -1,13 +1,17 @@
 # Aplicación web del proyecto "Cartera verde de proyectos financiables alineados con la NDC"
 Esta es una aplicación web para consultar y explorar los datos generados por el proyecto "Cartera verde de proyectos financiables alineados con la NDC". Fue desarrollada con los paquetes [flexdasboard](https://pkgs.rstudio.com/flexdashboard/) y [Shiny](https://shiny.rstudio.com/) del lenguaje de programación [R](https://www.r-project.org/).
 
-La aplicación está disponible en la dirección:
+La aplicación está disponible en la dirección:  
 [Cartera verde de proyectos financiables alineados con la NDC]()
 
 ## Procesamiento de los datos de entrada
+La aplicación recibe tres archivos de entrada:
+- proyectos.csv
+- cantones.geojson
+- regiones-mideplan.geojson
 
 ### Proyectos
-Los programas reciben como entrada un archivo CSV, el cual se generó a partir de un archivo Excel llamado `datos/PRODUCTO 3 BASE DE DATOS de Proyectos Verdes vNov01.xlsx` (las versiones anteriores de este archivo están en `datos/bak/`). Este archivo Excel proviene de una exportación de los datos recolectados mediante un formulario Google Forms. Tiene dos filas en blanco al inicio. En la fila 3, hay varias columnas con encabezado o que se identificaron como importantes:
+Este archivo CSV se generó a partir de un archivo Excel llamado `datos/PRODUCTO 3 BASE DE DATOS de Proyectos Verdes vNov01.xlsx` (las versiones anteriores de este archivo están en `datos/bak/`). Este archivo Excel proviene de una exportación de los datos recolectados mediante un formulario Google Forms. Tiene dos filas en blanco al inicio. En la fila 3, hay varias columnas con encabezado o que se identificaron como importantes:
 - 31: "Latitud"
 - 32: "Longitud"
 - 33: "Nombre del proyecto o iniciativa de cambio climático" 
