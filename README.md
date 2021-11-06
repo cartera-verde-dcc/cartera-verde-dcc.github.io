@@ -10,7 +10,7 @@ La aplicación recibe tres archivos de entrada:
 - cantones.geojson
 - regiones-mideplan.geojson
 
-### Proyectos
+### proyectos.csv
 Este archivo CSV se generó a partir de un archivo Excel llamado `datos/PRODUCTO 3 BASE DE DATOS de Proyectos Verdes vNov01.xlsx` (las versiones anteriores de este archivo están en `datos/bak/`). Este archivo Excel proviene de una exportación de los datos recolectados mediante un formulario Google Forms. Tiene dos filas en blanco al inicio. En la fila 3, hay varias columnas con encabezado o que se identificaron como importantes:
 - 31: "Latitud"
 - 32: "Longitud"
@@ -52,7 +52,7 @@ Además,
 
 - ¿Cuáles columnas debe incluírse en el conjunto de datos?
 
-### Cantones
+### cantones.geojson
 ```shell
 $ ogr2ogr \
     -simplify 100 \
@@ -61,7 +61,7 @@ $ ogr2ogr \
     WFS:"http://geos.snitcr.go.cr/be/IGN_5/wfs" "IGN_5:limitecantonal_5k" 
 ```
 
-### Regiones de Mideplan
+### regiones-mideplan.geojson
 ```shell
 # Borrado de archivos generados en ejecuciones anteriores
 rm regiones-mideplan.geojson
