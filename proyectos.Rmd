@@ -1,0 +1,494 @@
+---
+title: "Cartera verde de iniciativas y proyectos financiables alineados con la NDC"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: sandstone
+    orientation: rows
+runtime: shiny    
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+```{r paquetes}
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(sf)
+library(DT)
+library(plotly)
+library(leaflet)
+library(leaflet.extras)
+library(leafem)
+```
+
+```{r datos}
+# Lectura de una capa vectorial (GeoJSON) de cantones de Costa Rica
+cantones <-
+  st_read(
+    "https://raw.githubusercontent.com/cartera-verde-dcc/cartera-verde-dcc.github.io/master/datos/cantones-simplificadas_100m.geojson",
+    quiet = TRUE
+  )
+# Transformación del CRS del objeto cantones
+cantones <-
+  cantones %>%
+  st_transform(4326)
+
+# Lectura de un archivo CSV con datos de los proyectos y coordendas de las oficinas centrales
+proyectos <-
+  st_read(
+    "/vsicurl/https://raw.githubusercontent.com/cartera-verde-dcc/cartera-verde-dcc.github.io/master/datos/proyectos.csv",
+    options = c("X_POSSIBLE_NAMES=c032",
+                "Y_POSSIBLE_NAMES=c031"),
+    quiet = TRUE
+  )
+# Asignación de CRS
+st_crs(proyectos) <- 4326
+
+# Selección y renombramiento de columnas
+proyectos <-
+  proyectos %>%
+  select(c005, c006, c007, c020, c031, c032, c040, c041, c042, c043, c044) %>%
+  rename(nombre = c005) %>%
+  rename(tipo_actor = c006) %>%
+  rename(cedula = c007) %>%
+  rename(web = c020) %>%
+  rename(latitud = c031) %>%
+  rename(longitud = c032) %>%
+  rename(regiones = c040) %>%
+  rename(cantones = c041) %>%
+  rename(tema_ac = c042) %>%
+  rename(subtema_ac = c043) %>%
+  rename(tipo_ac = c044)
+
+# Limpieza de datos
+proyectos <-
+  proyectos %>%
+  filter(nombre != "") %>%
+  mutate(cantones = str_replace_all(cantones, fixed("Perez Zeledón"), "Pérez Zeledón")) %>%
+  mutate(cantones = str_replace_all(cantones, fixed("Talmanca"), "Talamanca")) %>%
+  mutate(cantones = str_trim(cantones, side = "both")) %>%
+  mutate(cantones = str_squish(cantones)) %>%
+  mutate(tema_ac = str_replace_all(tema_ac, fixed("_"), " "))  
+
+# Data frame proyectos_cantones
+proyectos_cantones <-
+  proyectos %>%
+  st_drop_geometry() %>%
+  select(cedula, tipo_actor, tema_ac, subtema_ac, tipo_ac, cantones) %>%
+  filter(cantones != "") %>%
+  mutate(cantones = str_replace_all(cantones, fixed(", "), ",")) %>%
+  mutate(cantones = strsplit(as.character(cantones), ",")) %>%
+  unnest(cantones) %>%
+  rename(canton = cantones)
+
+# Data frame proyectos_cantones_conteo
+proyectos_cantones_conteo <-
+  proyectos_cantones %>%
+  group_by(canton) %>%
+  summarize(cantidad_proyectos = n())
+
+# Join de cantones con proyecto_cantones_conteo
+cantones <- left_join(cantones, proyectos_cantones_conteo)
+
+# Reemplazo de NA
+cantones <-
+  cantones %>%
+  mutate(cantidad_proyectos = ifelse(is.na(cantidad_proyectos), 0, cantidad_proyectos))
+
+# Lista ordenada de tipos de actor + "Todos"
+lista_tipos_actores <- unique(proyectos$tipo_actor)
+lista_tipos_actores <- sort(lista_tipos_actores)
+lista_tipos_actores <- c("Todos", lista_tipos_actores)
+
+# Lista ordenada de temas de acción climática + "Todos"
+lista_temas_ac <- unique(proyectos$tema_ac)
+lista_temas_ac <- sort(lista_temas_ac)
+lista_temas_ac <- c("Todos", lista_temas_ac)
+
+# Lista ordenada de subtemas de acción climática + "Todos"
+lista_subtemas_ac <- unique(proyectos$subtema_ac)
+lista_subtemas_ac <- sort(lista_subtemas_ac)
+lista_subtemas_ac <- c("Todos", lista_subtemas_ac)
+
+# Lista ordenada de tipos de acción climática + "Todos"
+lista_tipos_ac <- unique(proyectos$tipo_ac)
+lista_tipos_ac <- sort(lista_tipos_ac)
+lista_tipos_ac <- c("Todos", lista_tipos_ac)
+```
+
+Filtros {.sidebar}
+-------------------------------------
+
+```{r filtros}
+
+h3("Filtros")
+
+# Selector de tipo de actor
+selectInput(
+  inputId = "tipo_actor",
+  label = "Tipo de actor",
+  choices = lista_tipos_actores,
+  selected = "Todos"
+)
+
+# Selector de tema de acción climática
+selectInput(
+  inputId = "tema_ac",
+  label = "Tema de acción climática",
+  choices = lista_temas_ac,
+  selected = "Todos"
+)
+
+# Selector de subtema de acción climática
+selectInput(
+  inputId = "subtema_ac",
+  label = "Subtema de acción climática",
+  choices = lista_subtemas_ac,
+  selected = "Todos"
+)
+
+# Selector de tipo de acción climática
+selectInput(
+  inputId = "tipo_ac",
+  label = "Tipo de acción climática",
+  choices = lista_tipos_ac,
+  selected = "Todos"
+)
+
+# Función para filtrar proyectos con base en los controles de entrada
+filtrarProyectos <- reactive({
+  proyectos_filtrados <- proyectos
+  
+  # Filtrado por tipo de actor
+  if (input$tipo_actor != "Todos") {
+    proyectos_filtrados <-
+      proyectos_filtrados %>%
+      filter(tipo_actor == input$tipo_actor)
+  }
+  
+  # Filtrado por tema de acción climática
+  if (input$tema_ac != "Todos") {
+    proyectos_filtrados <-
+      proyectos_filtrados %>%
+      filter(tema_ac == input$tema_ac)
+  }  
+  
+  # Filtrado por subtema de acción climática
+  if (input$subtema_ac != "Todos") {
+    proyectos_filtrados <-
+      proyectos_filtrados %>%
+      filter(subtema_ac == input$subtema_ac)
+  }    
+  
+  # Filtrado por tipo de acción climática
+  if (input$tipo_ac != "Todos") {
+    proyectos_filtrados <-
+      proyectos_filtrados %>%
+      filter(tipo_ac == input$tipo_ac)
+  }    
+
+  return(proyectos_filtrados)
+})
+
+# Función para filtrar cantones con base en los controles de entrada
+filtrarCantones <- reactive({
+  proyectos_cantones_filtrados <- proyectos_cantones
+  cantones_filtrados <- cantones
+
+  # Filtrado por tipo de actor
+  if (input$tipo_actor != "Todos") {
+    proyectos_cantones_filtrados <-
+      proyectos_cantones_filtrados %>%
+      filter(tipo_actor == input$tipo_actor)
+    
+    proyectos_cantones_conteo_filtrados <-
+      proyectos_cantones_filtrados %>%
+      group_by(canton) %>%
+      summarize(cantidad_proyectos = n())
+    
+    cantones_filtrados <- 
+      cantones_filtrados %>%
+      select(-c(cantidad_proyectos))    
+    
+    cantones_filtrados <-
+      left_join(cantones_filtrados, proyectos_cantones_conteo_filtrados)   
+
+    cantones_filtrados <-
+      cantones_filtrados %>%
+      mutate(cantidad_proyectos = ifelse(is.na(cantidad_proyectos), 0, cantidad_proyectos))
+  }
+  
+  # Filtrado por tema de acción climática
+  if (input$tema_ac != "Todos") {
+    proyectos_cantones_filtrados <-
+      proyectos_cantones_filtrados %>%
+      filter(tema_ac == input$tema_ac)
+    
+    proyectos_cantones_conteo_filtrados <-
+      proyectos_cantones_filtrados %>%
+      group_by(canton) %>%
+      summarize(cantidad_proyectos = n())
+    
+    cantones_filtrados <- 
+      cantones_filtrados %>%
+      select(-c(cantidad_proyectos))    
+    
+    cantones_filtrados <-
+      left_join(cantones_filtrados, proyectos_cantones_conteo_filtrados)   
+
+    cantones_filtrados <-
+      cantones_filtrados %>%
+      mutate(cantidad_proyectos = ifelse(is.na(cantidad_proyectos), 0, cantidad_proyectos))
+  }
+  
+  # Filtrado por subtema de acción climática
+  if (input$subtema_ac != "Todos") {
+    proyectos_cantones_filtrados <-
+      proyectos_cantones_filtrados %>%
+      filter(subtema_ac == input$subtema_ac)
+    
+    proyectos_cantones_conteo_filtrados <-
+      proyectos_cantones_filtrados %>%
+      group_by(canton) %>%
+      summarize(cantidad_proyectos = n())
+    
+    cantones_filtrados <- 
+      cantones_filtrados %>%
+      select(-c(cantidad_proyectos))    
+    
+    cantones_filtrados <-
+      left_join(cantones_filtrados, proyectos_cantones_conteo_filtrados)   
+
+    cantones_filtrados <-
+      cantones_filtrados %>%
+      mutate(cantidad_proyectos = ifelse(is.na(cantidad_proyectos), 0, cantidad_proyectos))
+  }    
+  
+  # Filtrado por tipo de acción climática
+  if (input$tipo_ac != "Todos") {
+    proyectos_cantones_filtrados <-
+      proyectos_cantones_filtrados %>%
+      filter(tipo_ac == input$tipo_ac)
+    
+    proyectos_cantones_conteo_filtrados <-
+      proyectos_cantones_filtrados %>%
+      group_by(canton) %>%
+      summarize(cantidad_proyectos = n())
+    
+    cantones_filtrados <- 
+      cantones_filtrados %>%
+      select(-c(cantidad_proyectos))    
+    
+    cantones_filtrados <-
+      left_join(cantones_filtrados, proyectos_cantones_conteo_filtrados)   
+
+    cantones_filtrados <-
+      cantones_filtrados %>%
+      mutate(cantidad_proyectos = ifelse(is.na(cantidad_proyectos), 0, cantidad_proyectos))
+  }  
+
+  return(cantones_filtrados)
+})
+```
+
+Row {data-height=700}
+-----------------------------------------------------------------------
+
+### Cantones influenciados, regiones influenciados y oficinas centrales de las iniciativas y proyectos
+
+```{r mapa}
+renderLeaflet({
+  proyectos <- filtrarProyectos()
+  cantones <- filtrarCantones()
+  
+  pal_cantidad_proyectos <-
+    colorNumeric(palette = "PuRd", domain = proyectos$cantidad_proyectos)
+  
+  leaflet() %>%
+    setView(lng = -84.19452,
+            lat = 9.572735,
+            zoom = 8) %>%
+    addTiles(group = "OpenStreetMap") %>%
+    addProviderTiles(providers$Stamen.TonerLite, group = "Stamen Toner Lite") %>%
+    addProviderTiles(providers$CartoDB.DarkMatter, group = "CartoDB Dark Matter") %>%
+    addProviderTiles(providers$Esri.WorldImagery, group = "Imágenes de ESRI") %>%
+    addPolygons(
+      data = cantones,
+      group = "Cantones",
+      color = "black",
+      stroke = TRUE,
+      weight = 1.0,
+      fillColor = ~ pal_cantidad_proyectos(cantidad_proyectos),
+      fillOpacity = 0.8,
+      popup = paste0(
+        "<strong>Cantón: </strong>",
+        cantones$canton,
+        "<br>",
+        "<strong>Cantidad de proyectos con influencia: </strong>",
+        cantones$cantidad_proyectos
+      )
+    ) %>%
+    addLegend(
+      position = "bottomright",
+      pal = pal_cantidad_proyectos,
+      values = cantones$cantidad_proyectos,
+      labFormat = labelFormat(digits = 0),
+      group = "Cantones",
+      title = "Cantidad de proyectos"
+    ) %>%
+    addCircleMarkers(
+      data = proyectos,
+      group = "Oficinas centrales",
+      fillColor = 'red',
+      fillOpacity = 1,
+      stroke = TRUE,
+      radius = 4,
+      popup = paste0(
+        "<strong>Proyecto: </strong>",
+        ifelse(
+          proyectos$web == "N/A",
+          proyectos$nombre,
+          paste0('<a href="', proyectos$web, '">', proyectos$nombre, "</a>")
+        ),
+        "<br>",
+        "<strong>Tipo de actor: </strong>",
+        proyectos$tipo_actor,
+        "<br>",
+        "<strong>Tema de acción climática: </strong>",
+        proyectos$tema_ac,   
+        "<br>",
+        "<strong>Subtema de acción climática: </strong>",
+        proyectos$subtema_ac,
+        "<br>",
+        "<strong>Tipo de acción climática: </strong>",
+        proyectos$tipo_ac,           
+        ifelse(
+          proyectos$cantones != "",
+          paste0(
+            "<br><strong>Cantones influenciados: </strong>",
+            proyectos$cantones
+          ),
+          ""
+        )
+      )
+    ) %>%
+    addLayersControl(
+      baseGroups = c(
+        "OpenStreetMap",
+        "Stamen Toner Lite",
+        "CartoDB Dark Matter",
+        "Imágenes de ESRI"
+      ),
+      overlayGroups = c("Cantones", "Oficinas centrales")
+    ) %>%
+    addScaleBar(position = "bottomleft",
+                options = scaleBarOptions(imperial = FALSE)) %>%
+    addMouseCoordinates() %>%
+    addSearchOSM() %>%
+    addResetMapButton()
+})
+```
+
+### Iniciativas y proyectos
+
+```{r tabla-proyectos}
+renderDT({
+  proyectos <- filtrarProyectos()
+  
+  proyectos %>%
+    st_drop_geometry() %>%
+    select(nombre, tipo_actor, tema_ac, subtema_ac, tipo_ac, cantones) %>%
+    datatable(
+      rownames = FALSE,
+      colnames = c(
+        "Iniciativa o proyecto",
+        "Tipo de actor",
+        "Tema de AC",
+        "Subtema de AC",
+        "Tipo de AC",
+        "Cantones influenciados"
+      ),
+      extensions = c("Buttons"),
+      options = list(
+        pageLength = 5,
+        searchHighlight = TRUE,
+        lengthMenu = list(c(5, 10, 15, 25, 50, 100,-1), c(5, 10, 15, 25, 50, 100, "Todos")),
+        dom = 'Bfrtlip',
+        language = list(url = "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json"),
+        buttons = list(
+          list(extend = 'copy', text = 'Copiar'),
+          list(extend = 'csv', text = 'CSV'),
+          list(extend = 'csv', text = 'Excel'),
+          list(extend = 'pdf', text = 'PDF')
+        )
+      )
+    )
+})  
+```
+
+Row {data-height=300}
+-----------------------------------------------------------------------
+
+### Cantidad de iniciativas y proyectos por cantón {data-width=600}
+
+```{r grafico-proyectos_x_canton}
+renderPlotly({
+  cantones <- filtrarCantones()
+  
+  cantones %>%
+    st_drop_geometry() %>%
+    filter(cantidad_proyectos >= 1) %>%
+    top_n(n = 10, wt = cantidad_proyectos) %>%
+    mutate(canton = factor(canton, levels = unique(canton)[order(cantidad_proyectos, decreasing = TRUE)])) %>%
+    arrange(desc(cantidad_proyectos)) %>%
+    plot_ly(
+      x = ~ canton,
+      y = ~ cantidad_proyectos,
+      type = "bar",
+      name = "Proyectos",
+      text = ~ cantidad_proyectos,
+      textposition = 'auto',
+      marker = list(color = "#980043")
+    ) %>%
+    layout(
+      yaxis = list(title = "Cantidad de iniciativas y proyectos"),
+      xaxis = list(title = "Cantones"),
+      barmode = 'group',
+      hovermode = "compare"
+    ) %>%
+    config(locale = 'es')
+})
+```
+
+### Cantidad de iniciativas y proyectos por región {data-width=400}
+
+```{r grafico-proyectos_x_region}
+renderPlotly({
+  cantones <- filtrarCantones()
+  
+  cantones %>%
+    st_drop_geometry() %>%
+    filter(cantidad_proyectos >= 1) %>%
+    top_n(n = 10, wt = cantidad_proyectos) %>%
+    mutate(canton = factor(canton, levels = unique(canton)[order(cantidad_proyectos, decreasing = TRUE)])) %>%
+    arrange(desc(cantidad_proyectos)) %>%
+    plot_ly(
+      x = ~ canton,
+      y = ~ cantidad_proyectos,
+      type = "bar",
+      name = "Proyectos",
+      text = ~ cantidad_proyectos,
+      textposition = 'auto',
+      marker = list(color = "#980043")
+    ) %>%
+    layout(
+      yaxis = list(title = "Cantidad de iniciativas y proyectos"),
+      xaxis = list(title = "Cantones"),
+      barmode = 'group',
+      hovermode = "compare"
+    ) %>%
+    config(locale = 'es')
+})
+```

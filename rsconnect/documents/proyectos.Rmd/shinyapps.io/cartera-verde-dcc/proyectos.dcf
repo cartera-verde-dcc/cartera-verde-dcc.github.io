@@ -1,0 +1,13 @@
+name: proyectos
+title: proyectos
+username:
+account: cartera-verde-dcc
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5049454
+bundleId: 5215392
+url: https://cartera-verde-dcc.shinyapps.io/proyectos/
+when: 1636079837.24835
+lastSyncTime: 1636079837.24838
+asMultiple: FALSE
+asStatic: FALSE
