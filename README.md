@@ -64,10 +64,10 @@ ogr2ogr \
 ### regiones-mideplan.geojson
 ```shell
 # Borrado de archivos generados en ejecuciones anteriores
-rm regiones-mideplan-simplificadas_100m.geojson
+rm regiones-socioeconomicas-simplificadas_100m.geojson
 
 # Archivo temporal
-cp regiones-mideplan-atlas2014/regiones_mideplan.* .
+cp regiones-socioeconomicas-atlas2014/regiones_mideplan.* .
 
 # Reubicación de polígonos en regiones
 ogrinfo -dialect sqlite -sql "UPDATE regiones_mideplan SET REGION = 'CENTRAL' WHERE REGION = 'CARTAGO' OR (REGION = 'HEREDIA' AND NCANTON <> 'SARAPIQUI')" regiones_mideplan.shp
@@ -84,13 +84,13 @@ ogrinfo -dialect sqlite -sql "UPDATE regiones_mideplan SET REGION = 'Pacífico C
 
 # Unión de polígonos en regiones
 ogr2ogr \
-  -dialect sqlite -sql "SELECT ST_Union(geometry), REGION FROM regiones_mideplan WHERE REGION IS NOT NULL GROUP BY REGION" \
+  -dialect sqlite -sql "SELECT ST_Union(geometry), REGION region FROM regiones_mideplan WHERE REGION IS NOT NULL GROUP BY REGION" \
   -t_srs EPSG:4326 \
   -simplify 100 \
   -makevalid \
-  regiones-mideplan-simplificadas_100m.geojson \
+  regiones-socioeconomicas-simplificadas_100m.geojson \
   regiones_mideplan.shp \
-  -nln regiones-mideplan
+  -nln regiones-socioeconomicas
 
 # Borrado del archivo temporal  
 rm regiones_mideplan.*
