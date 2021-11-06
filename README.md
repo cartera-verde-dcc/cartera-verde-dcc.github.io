@@ -6,12 +6,15 @@ La aplicación está disponible en la dirección:
 
 ## Procesamiento de los datos de entrada
 La aplicación recibe tres archivos de entrada:
+
 - proyectos.csv
 - cantones.geojson
-- regiones-mideplan.geojson
+- regiones-socioeconomicas.geojson
+
+Seguidamente, se explica como se generó cada uno de los archivos.
 
 ### proyectos.csv
-Este archivo CSV se generó a partir de un archivo Excel llamado `datos/PRODUCTO 3 BASE DE DATOS de Proyectos Verdes vNov01.xlsx` (las versiones anteriores de este archivo están en `datos/bak/`). Este archivo Excel proviene de una exportación de los datos recolectados mediante un formulario Google Forms. Tiene dos filas en blanco al inicio. En la fila 3, hay varias columnas con encabezado o que se identificaron como importantes:
+Se generó a partir de un archivo Excel llamado `datos/PRODUCTO 3 BASE DE DATOS de Proyectos Verdes vNov01.xlsx` (las versiones anteriores de este archivo están en `datos/bak/`). Este archivo Excel proviene de una exportación de los datos recolectados mediante un formulario Google Forms. Tiene dos filas en blanco al inicio. En la fila 3, hay varias columnas con encabezado o que se identificaron como importantes:
 - 31: "Latitud"
 - 32: "Longitud"
 - 33: "Nombre del proyecto o iniciativa de cambio climático" 
@@ -48,11 +51,9 @@ Para asignar nombres temporales a las 121 columnas, se abrió con un editor de t
 - Monteverde no está en el mapa de cantones del IGN.
 - En `datos/proyectos.csv` hay tres filas para `(cedula, nombre)` = `(3002045043, "Asociación Centro Científico Tropical")`.
 
-Además,
-
-- ¿Cuáles columnas debe incluírse en el conjunto de datos?
-
 ### cantones.geojson
+Se generó a partir de la [capa "Límite Cantonal 1:5mil"](https://www.snitcr.go.cr/ico_servicios_ogc_info?k=bm9kbzo6MjY=&nombre=IGN%20Cartograf%C3%ADa%201:5mil) publicada por el Instituto Geográfico Nacional (IGN) en el Sistema Nacional de Información Territorial (SNIT).
+
 ```shell
 cd datos
 
@@ -64,6 +65,8 @@ ogr2ogr \
 ```
 
 ### regiones-socioeconomicas.geojson
+Se generó a partir de la capa "Regiones_mideplan" publicada en el Atlas digital de Costa Rica 2014.
+
 ```shell
 cd datos
 
