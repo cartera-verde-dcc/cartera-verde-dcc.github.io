@@ -61,7 +61,7 @@ $ ogr2ogr \
     WFS:"http://geos.snitcr.go.cr/be/IGN_5/wfs" "IGN_5:limitecantonal_5k" 
 ```
 
-### Regiones socioeconómicas de Mideplan
+### Regiones de Mideplan
 ```shell
 # Borrado de archivos generados en ejecuciones anteriores
 rm regiones-mideplan.geojson
