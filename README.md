@@ -64,7 +64,7 @@ $ ogr2ogr \
 ### regiones-mideplan.geojson
 ```shell
 # Borrado de archivos generados en ejecuciones anteriores
-rm regiones-mideplan.geojson
+rm regiones-mideplan-simplificadas_100m.geojson
 
 # Archivo temporal
 cp regiones-mideplan-atlas2014/regiones_mideplan.* .
@@ -88,7 +88,7 @@ ogr2ogr \
   -t_srs EPSG:4326 \
   -simplify 100 \
   -makevalid \
-  regiones-mideplan.geojson \
+  regiones-mideplan-simplificadas_100m.geojson \
   regiones_mideplan.shp \
   -nln regiones-mideplan
 
