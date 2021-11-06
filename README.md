@@ -54,11 +54,11 @@ Además,
 
 ### cantones.geojson
 ```shell
-$ ogr2ogr \
-    -simplify 100 \
-    -makevalid \
-    cantones-simplificadas_100m.geojson \
-    WFS:"http://geos.snitcr.go.cr/be/IGN_5/wfs" "IGN_5:limitecantonal_5k" 
+ogr2ogr \
+  -simplify 100 \
+  -makevalid \
+  cantones-simplificadas_100m.geojson \
+  WFS:"http://geos.snitcr.go.cr/be/IGN_5/wfs" "IGN_5:limitecantonal_5k" 
 ```
 
 ### regiones-mideplan.geojson
