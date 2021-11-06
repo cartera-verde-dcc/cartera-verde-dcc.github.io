@@ -86,6 +86,7 @@ ogrinfo -dialect sqlite -sql "UPDATE regiones_mideplan SET REGION = 'Pacífico C
 ogr2ogr \
   -dialect sqlite -sql "SELECT ST_Union(geometry), REGION FROM regiones_mideplan WHERE REGION IS NOT NULL GROUP BY REGION" \
   -t_srs EPSG:4326 \
+  -simplify 100 \
   -makevalid \
   regiones-mideplan.geojson \
   regiones_mideplan.shp \
