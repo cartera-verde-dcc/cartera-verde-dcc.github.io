@@ -1,8 +1,22 @@
-# Aplicación web del proyecto "Cartera verde de proyectos financiables alineados con la NDC"
-Esta es una aplicación web para consultar y explorar los datos generados por el proyecto "Cartera verde de proyectos financiables alineados con la NDC (*Nationally Determined Contributions*)". Fue desarrollada con los paquetes [flexdasboard](https://pkgs.rstudio.com/flexdashboard/) y [Shiny](https://shiny.rstudio.com/) del lenguaje de programación [R](https://www.r-project.org/).
+# Aplicación web del proyecto "Elaboración y análisis de una cartera verde de proyectos financiables alineados con la NDC de Costa Rica 2020"
+Esta es una aplicación web para consultar y explorar los datos generados por el proyecto "Elaboración y análisis de una cartera verde de proyectos financiables alineados con la NDC (*Nationally Determined Contributions Partnership*) de Costa Rica 2020". Esta cartera de proyectos es para la [Dirección de Cambio Climático](https://cambioclimatico.go.cr/). El proyecto es financiado por el [Programa de las Naciones Unidas para el Desarrollo (PNUD) en Costa Rica](https://www.cr.undp.org/).
 
-La aplicación está disponible en la dirección:  
+La aplicación está disponible en:  
 [Cartera verde de proyectos financiables alineados con la NDC](https://cartera-verde-dcc.shinyapps.io/iniciativas-proyectos/)
+
+La interfaz de usuario de la aplicación está compuesta por un conjunto de mapas, tablas y gráficos interactivos que muestran, entre otros, los siguientes elementos de información relacionados con las iniciativas o proyectos:
+
+- Nombre
+- Tipo de actor (municipalidad, ONG, persona física, etc.)
+- Cédula
+- Coordenadas geográficas (longitud y latitud) de las oficinas centrales
+- Cantones en los que tiene influencia
+- Regiones socioeconómicas en las que tiene influencia
+- Tema de acción climática (energía, industria, transporte, turismo, etc.)
+- Subtema de acción climática (aprovechamiento y gestión de residuos, hospedaje, tour operación, etc.)
+- Tipo de acción climática (adaptación, mitigación o ambas)
+
+La aplicación fue desarrollada con los paquetes [flexdasboard](https://pkgs.rstudio.com/flexdashboard/) y [Shiny](https://shiny.rstudio.com/) del lenguaje de programación [R](https://www.r-project.org/). Está alojada en la plataforma [shinyapps.io](https://www.shinyapps.io/) de [RStudio](https://www.rstudio.com/). El código fuente y la documentación están disponibles en [https://github.com/cartera-verde-dcc](https://github.com/cartera-verde-dcc).
 
 ## Procesamiento de los datos de entrada
 La aplicación recibe tres archivos de entrada:
