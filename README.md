@@ -2,14 +2,14 @@
 Esta es una aplicación web para consultar y explorar los datos generados por el proyecto "Cartera verde de proyectos financiables alineados con la NDC". Fue desarrollada con los paquetes [flexdasboard](https://pkgs.rstudio.com/flexdashboard/) y [Shiny](https://shiny.rstudio.com/) del lenguaje de programación [R](https://www.r-project.org/).
 
 La aplicación está disponible en la dirección:  
-[Cartera verde de proyectos financiables alineados con la NDC]()
+[Cartera verde de proyectos financiables alineados con la NDC](https://cartera-verde-dcc.shinyapps.io/iniciativas-proyectos/)
 
 ## Procesamiento de los datos de entrada
 La aplicación recibe tres archivos de entrada:
 
-- proyectos.csv
-- cantones.geojson
-- regiones-socioeconomicas.geojson
+- `proyectos.csv`
+- `cantones.geojson`
+- `regiones-socioeconomicas.geojson`
 
 Seguidamente, se explica como se generó cada uno de los archivos.
 
