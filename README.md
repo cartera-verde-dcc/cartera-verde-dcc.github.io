@@ -2,7 +2,7 @@
 Esta es una aplicación web para consultar y explorar los datos generados por el proyecto "Elaboración y análisis de una cartera verde de proyectos financiables alineados con la NDC (*Nationally Determined Contributions Partnership*) de Costa Rica 2020". Esta cartera de proyectos es para la [Dirección de Cambio Climático](https://cambioclimatico.go.cr/). El proyecto es financiado por el [Programa de las Naciones Unidas para el Desarrollo (PNUD) en Costa Rica](https://www.cr.undp.org/).
 
 La aplicación está disponible en:  
-[Cartera verde de proyectos financiables alineados con la NDC](https://cartera-verde-dcc.shinyapps.io/iniciativas-proyectos/)
+[https://cartera-verde-dcc.shinyapps.io/iniciativas-proyectos/](https://cartera-verde-dcc.shinyapps.io/iniciativas-proyectos/)
 
 La interfaz de usuario de la aplicación está compuesta por un conjunto de mapas, tablas y gráficos interactivos que muestran, entre otros, los siguientes elementos de información relacionados con las iniciativas o proyectos:
 
