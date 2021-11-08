@@ -1,5 +1,5 @@
 ---
-title: "Cartera verde de iniciativas y proyectos financiables alineados con la NDC"
+title: "Cartera verde de iniciativas y proyectos financiables alineados con la NDC de Costa Rica 2020"
 output: 
   flexdashboard::flex_dashboard:
     theme: sandstone
@@ -573,7 +573,7 @@ filtrarRegiones <- reactive({
 Row {data-height=700}
 -----------------------------------------------------------------------
 
-### Cantones influenciados, regiones influenciadas y oficinas centrales de las iniciativas y proyectos
+### Cantones influenciados, regiones socioeconómicas influenciadas y oficinas centrales de las iniciativas y proyectos
 
 ```{r mapa}
 renderLeaflet({
@@ -718,6 +718,12 @@ renderLeaflet({
     addMouseCoordinates() %>%
     addSearchOSM() %>%
     addResetMapButton()
+  
+  if (input$canton == "Todos" & input$region == "Todas") {
+    m <-
+      m %>%
+      hideGroup("Regiones SE")
+  }
   
   m
 })
