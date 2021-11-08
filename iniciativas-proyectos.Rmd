@@ -630,7 +630,7 @@ renderLeaflet({
       m %>%
       addPolygons(
         data = regiones,
-        group = "Regiones SE",
+        group = "Regiones socioeconómicas",
         color = "black",
         stroke = TRUE,
         weight = 1.0,
@@ -649,7 +649,7 @@ renderLeaflet({
         pal = pal_cantidad_proyectos_regiones,
         values = regiones$cantidad_proyectos,
         labFormat = labelFormat(digits = 0),
-        group = "Regiones SE",
+        group = "Regiones socioeconómicas",
         title = "Iniciativas y proyectos en regiones SE"
       )
   }
@@ -693,7 +693,7 @@ renderLeaflet({
         ifelse(
           proyectos$regiones != "",
           paste0(
-            "<br><strong>Regiones SE influenciadas: </strong>",
+            "<br><strong>Regiones socioeconómicas influenciadas: </strong>",
             proyectos$regiones
           ),
           ""
@@ -709,7 +709,7 @@ renderLeaflet({
       ),
       overlayGroups = c(
         ifelse(input$region == "Todas", "Cantones", ""),
-        ifelse(input$canton == "Todos", "Regiones SE", ""),
+        ifelse(input$canton == "Todos", "Regiones socioeconómicas", ""),
         "Oficinas centrales"
       )
     ) %>%
@@ -722,7 +722,7 @@ renderLeaflet({
   if (input$canton == "Todos" & input$region == "Todas") {
     m <-
       m %>%
-      hideGroup("Regiones SE")
+      hideGroup("Regiones socioeconómicas")
   }
   
   m
