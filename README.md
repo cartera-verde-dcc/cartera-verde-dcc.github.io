@@ -1,5 +1,5 @@
 # Aplicación web del proyecto "Elaboración y análisis de una cartera verde de proyectos financiables alineados con la NDC de Costa Rica 2020"
-Esta es una aplicación web para consultar y explorar los datos generados por el proyecto "Elaboración y análisis de una cartera verde de proyectos financiables alineados con la NDC (*Nationally Determined Contributions Partnership*) de Costa Rica 2020". Esta cartera de proyectos es para la [Dirección de Cambio Climático](https://cambioclimatico.go.cr/). El proyecto es financiado por el [Programa de las Naciones Unidas para el Desarrollo (PNUD) en Costa Rica](https://www.cr.undp.org/).
+Esta es una aplicación web para consultar y explorar los datos generados por el proyecto "Elaboración y análisis de una cartera verde de proyectos financiables alineados con la NDC (*Nationally Determined Contributions Partnership*) de Costa Rica 2020". Esta cartera se elaboró para la [Dirección de Cambio Climático](https://cambioclimatico.go.cr/). El proyecto fue financiado por el [Programa de las Naciones Unidas para el Desarrollo (PNUD) en Costa Rica](https://www.cr.undp.org/).
 
 La aplicación está disponible en:  
 [https://cartera-verde-dcc.shinyapps.io/iniciativas-proyectos/](https://cartera-verde-dcc.shinyapps.io/iniciativas-proyectos/)
@@ -15,6 +15,10 @@ La interfaz de usuario de la aplicación está compuesta por un conjunto de mapa
 - Tema de acción climática (energía, industria, transporte, turismo, etc.)
 - Subtema de acción climática (aprovechamiento y gestión de residuos, hospedaje, tour operación, etc.)
 - Tipo de acción climática (adaptación, mitigación o ambas)
+
+La interfaz permite visualizar, través de mapas y gráficos estadísticos, como está distribuida el área de influencia de las iniciativas y proyectos en los cantones y en las regiones socioeconómicas de Costa Rica. Los datos se presentan también en una tabla que puede ser filtrada, ordenada y exportada a diversos formatos de salida (CSV, Excel y PDF). Además, los datos que presenta la interfaz pueden ser filtrados de acuerdo con los elementos de información mencionados (tipo de actor, tema de acción climática, tipo de acción climática, etc.). La interfaz se muestra en la figura siguiente.
+
+
 
 La aplicación fue desarrollada con los paquetes [flexdasboard](https://pkgs.rstudio.com/flexdashboard/) y [Shiny](https://shiny.rstudio.com/) del lenguaje de programación [R](https://www.r-project.org/). Está alojada en la plataforma [shinyapps.io](https://www.shinyapps.io/) de [RStudio](https://www.rstudio.com/). El código fuente y la documentación están disponibles en [https://github.com/cartera-verde-dcc](https://github.com/cartera-verde-dcc).
 
