@@ -120,6 +120,6 @@ ogr2ogr \
   regiones_mideplan.shp \
   -nln regiones-socioeconomicas
 
-# Borrado del archivo temporal  
+# Borrado de los archivos temporales  
 rm regiones_mideplan.*
 ```
