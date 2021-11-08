@@ -49,6 +49,8 @@ En total, el archivo Excel tiene **200 filas y 121 columnas** de datos. Las sigu
 - 43: Subtema de acción climática
 - 44: Tipo de acción climática
 
+**IMPORTANTE**: para que la aplicación pueda procesar correctamente los cantones y las regiones socioeconómicas, los nombres en estas columnas deben ir separados por una coma y un espacio. Por ejemplo: `Heredia, San José, Puntarenas`.
+
 Una parte del procesamiento de este archivo se hizo con el programa LibreOffice Calc y otra parte mediante el lenguaje de programación R.
 
 #### Procedimiento para generar el archivo CSV
@@ -56,6 +58,7 @@ Una parte del procesamiento de este archivo se hizo con el programa LibreOffice 
 - Con la opción de menú **File | Save As...**, el archivo se guardó en formato CSV con el nombre `datos/proyectos.csv` (*Edit Filter Settings = Character set:Unicode(UTF-8) Field delimiter:, String delimiter:" Save content cell as shown*) (las versiones anteriores de este archivo están en `datos/bak/`).
 - Se eliminaron las tres primeras filas (estaban en blanco o sin información relevante) y se guardó nuevamente el archivo.
 - En la fila 10, columna 32; fila 133, columna 32 y fila 135, columna 32 se cambió una coma por un punto y se guardó nuevamente el archivo.
+- En la fila 10 (proyecto Yakukua) se corrigió el espaciado en la columna 41 (cantones).
 
 Para asignar nombres temporales a las 121 columnas, se abrió con un editor de texto el archivo `datos/proyectos.csv` y se insertó al principio la línea:
 
