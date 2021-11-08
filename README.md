@@ -18,7 +18,7 @@ La interfaz de usuario de la aplicación está compuesta por un conjunto de mapa
 
 La interfaz permite visualizar, través de mapas y gráficos estadísticos, como está distribuida el área de influencia de las iniciativas y proyectos en los cantones y en las regiones socioeconómicas de Costa Rica. Los datos se presentan también en una tabla que puede ser filtrada, ordenada y exportada a diversos formatos de salida (CSV, Excel y PDF). Además, los datos que presenta la interfaz pueden ser filtrados de acuerdo con los elementos de información mencionados (tipo de actor, tema de acción climática, tipo de acción climática, etc.). La interfaz se muestra en la figura siguiente.
 
-
+![Interfaz general de la aplicación](img/interfaz-general.png)
 
 La aplicación fue desarrollada con los paquetes [flexdasboard](https://pkgs.rstudio.com/flexdashboard/) y [Shiny](https://shiny.rstudio.com/) del lenguaje de programación [R](https://www.r-project.org/). Está alojada en la plataforma [shinyapps.io](https://www.shinyapps.io/) de [RStudio](https://www.rstudio.com/). El código fuente y la documentación están disponibles en [https://github.com/cartera-verde-dcc](https://github.com/cartera-verde-dcc).
 
