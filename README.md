@@ -29,26 +29,25 @@ La aplicación recibe tres archivos de entrada:
 - `cantones.geojson`
 - `regiones-socioeconomicas.geojson`
 
-Seguidamente, se explica como se generó cada uno de los archivos.
+Todos los archivos están almacenados en el subdirectorio `datos/`.
+
+Seguidamente, se explica como se procesó cada uno de los archivos.
 
 ### proyectos.csv
-Se generó a partir de un archivo Excel llamado `datos/PRODUCTO 3 BASE DE DATOS de Proyectos Verdes vNov01.xlsx` (las versiones anteriores de este archivo están en `datos/bak/`). Este archivo Excel proviene de una exportación de los datos recolectados mediante un formulario Google Forms. Tiene dos filas en blanco al inicio. En la fila 3, hay varias columnas con encabezado o que se identificaron como importantes:
-- 31: "Latitud"
-- 32: "Longitud"
-- 33: "Nombre del proyecto o iniciativa de cambio climático" 
-- 34: "Objetivo del proyecto"
-- 35: "Descripción de la actividad o proyecto"
-- 39: "Principal tema que atiende el proyecto"
-- 40: "Regiones (de Mideplan) de influencia del proyecto o iniciativa"
-- 41: "Cantones de influencia del proyecto o iniciativa"
-- 42: "Tema de acción climática"
-- 43: "Subtema de acción climática"
-- 44: "Mitigación y adaptación"
-- 58: "Justificación áreas de acción de las NDC"
-- 69: "Justificación de los Ejes seleccionados del Plan Nacional de Descarbonización"
-- 76: "Justificación de los Ejes seleccionados de la Política Nacional de Adaptación"
+Se generó a partir de un archivo Excel llamado `datos/PRODUCTO 3 BASE DE DATOS de Proyectos Verdes vNov01.xlsx` (las versiones anteriores de este archivo están en `datos/bak/`). Este archivo Excel proviene de una exportación de los datos de las iniciativas y proyectos, recolectados mediante un formulario Google Forms. Tiene dos filas en blanco al inicio.
 
-El archivo Excel tiene **200 filas y 121 columnas** de datos.
+En total, el archivo Excel tiene **200 filas y 121 columnas** de datos. Las siguientes son las columnas que se identificaron como de mayor importancia:
+
+- 05: Nombre de la iniciativa o proyecto
+- 06: Tipo de actor
+- 07: Cédula
+- 31: Latitud
+- 32: Longitud
+- 40: Regiones socioeconómicas en las que tiene influencia
+- 41: Cantones en los que tiene influencia
+- 42: Tema de acción climática
+- 43: Subtema de acción climática
+- 44: Tipo de acción climática
 
 #### Procedimiento para generar el archivo CSV
 - El archivo Excel se abrió en LibreOffice Calc.
@@ -70,7 +69,9 @@ Para asignar nombres temporales a las 121 columnas, se abrió con un editor de t
 - En `datos/proyectos.csv` hay tres filas para `(cedula, nombre)` = `(3002045043, "Asociación Centro Científico Tropical")`.
 
 ### cantones.geojson
-Se generó a partir de la [capa "Límite Cantonal 1:5mil"](https://www.snitcr.go.cr/ico_servicios_ogc_info?k=bm9kbzo6MjY=&nombre=IGN%20Cartograf%C3%ADa%201:5mil) publicada por el Instituto Geográfico Nacional (IGN) en el Sistema Nacional de Información Territorial (SNIT).
+Es una capa geoespacial, en formato GeoJSON, correspondiente a la división cantonal de Costa Rica. Se generó a partir de la [capa "Límite Cantonal 1:5mil"](https://www.snitcr.go.cr/ico_servicios_ogc_info?k=bm9kbzo6MjY=&nombre=IGN%20Cartograf%C3%ADa%201:5mil) publicada por el Instituto Geográfico Nacional (IGN) en el Sistema Nacional de Información Territorial (SNIT).
+
+Con los siguientes comandos de la biblioteca [GDAL](https://gdal.org/), la capa se simplificó, se validó y se convirtió al sistema de referencia espacial WGS84.
 
 ```shell
 cd datos
@@ -83,7 +84,7 @@ ogr2ogr \
 ```
 
 ### regiones-socioeconomicas.geojson
-Se generó a partir de la capa "Regiones_mideplan" publicada en el Atlas digital de Costa Rica 2014.
+Es otra capa geoespacial generada a partir de la capa "Regiones_mideplan" publicada en el Atlas digital de Costa Rica 2014. Contiene la división de Costa Rica en las regiones socioeconómicas definidas por el Ministerio de Planificación (Mideplan). Fue necesario actualizar la capa de acuerdo con la [versión más reciente](https://documentos.mideplan.go.cr/share/s/eZ8HYuxgTl6xCHx3ZAEBrg).
 
 ```shell
 cd datos
@@ -96,8 +97,7 @@ cp regiones-socioeconomicas-atlas2014/regiones_mideplan.* .
 
 # Reubicación de polígonos en regiones
 ogrinfo -dialect sqlite -sql "UPDATE regiones_mideplan SET REGION = 'CENTRAL' WHERE REGION = 'CARTAGO' OR (REGION = 'HEREDIA' AND NCANTON <> 'SARAPIQUI')" regiones_mideplan.shp
-ogrinfo -dialect sqlite -sql "UPDATE regiones_mideplan SET REGION = 'HUETAR ATLANTICA' WHERE NDISTRITO = 'HORQUETAS'" regiones_mideplan.shp
-ogrinfo -dialect sqlite -sql "UPDATE regiones_mideplan SET REGION = 'HUETAR NORTE' WHERE NCANTON = 'SARAPIQUI' AND NDISTRITO <> 'HORQUETAS'" regiones_mideplan.shp
+ogrinfo -dialect sqlite -sql "UPDATE regiones_mideplan SET REGION = 'HUETAR NORTE' WHERE NCANTON = 'SARAPIQUI'" regiones_mideplan.shp
 
 # Renombramiento de regiones
 ogrinfo -dialect sqlite -sql "UPDATE regiones_mideplan SET REGION = 'Brunca' WHERE REGION = 'BRUNCA'" regiones_mideplan.shp
