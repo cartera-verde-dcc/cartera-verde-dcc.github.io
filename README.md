@@ -20,23 +20,21 @@ La interfaz permite visualizar, través de mapas y gráficos estadísticos, como
 
 ![Interfaz general de la aplicación](img/interfaz-general.png)
 
-La aplicación fue desarrollada con los paquetes [flexdasboard](https://pkgs.rstudio.com/flexdashboard/) y [Shiny](https://shiny.rstudio.com/) del lenguaje de programación [R](https://www.r-project.org/). Está alojada en la plataforma [shinyapps.io](https://www.shinyapps.io/) de [RStudio](https://www.rstudio.com/). El código fuente y la documentación están disponibles en [https://github.com/cartera-verde-dcc](https://github.com/cartera-verde-dcc).
+La aplicación fue desarrollada con los paquetes [flexdasboard](https://pkgs.rstudio.com/flexdashboard/) y [Shiny](https://shiny.rstudio.com/) del lenguaje de programación [R](https://www.r-project.org/). Está alojada en la plataforma [shinyapps.io](https://www.shinyapps.io/) de [RStudio](https://www.rstudio.com/). El código fuente y la documentación están disponibles en la plataforma [GitHub](https://github.com/), en la dirección [https://github.com/cartera-verde-dcc](https://github.com/cartera-verde-dcc).
 
 Seguidamente, se detalla el proceso de preparación de los datos de entrada que utiliza la aplicación.
 
-## Procesamiento de los datos de entrada
-La aplicación recibe tres archivos de entrada:
+## Preparación de los datos de entrada
+La aplicación utiliza tres archivos de entrada:
 
 - `proyectos.csv`
 - `cantones.geojson`
 - `regiones-socioeconomicas.geojson`
 
-Todos los archivos están almacenados en el subdirectorio `datos/`.
-
-Seguidamente, se explica como se procesó cada uno de los archivos.
+Todos los archivos están almacenados en el subdirectorio `datos/`. Seguidamente, se explica como se procesó cada uno de los archivos.
 
 ### proyectos.csv
-Se generó a partir de un archivo Excel llamado `datos/PRODUCTO 3 BASE DE DATOS de Proyectos Verdes vNov01.xlsx` (las versiones anteriores de este archivo están en `datos/bak/`). Este archivo Excel proviene de una exportación de los datos de las iniciativas y proyectos, recolectados mediante un formulario Google Forms. Tiene dos filas en blanco al inicio.
+Se generó a partir de un archivo Excel llamado `datos/PRODUCTO 3 BASE DE DATOS de Proyectos Verdes vNov01.xlsx` (las versiones anteriores de este archivo están en `datos/bak/`). Este archivo Excel proviene de una exportación de los datos de las iniciativas y proyectos, recolectados mediante un formulario Google Forms.
 
 En total, el archivo Excel tiene **200 filas y 121 columnas** de datos. Las siguientes son las columnas que se identificaron como de mayor importancia:
 
@@ -51,17 +49,17 @@ En total, el archivo Excel tiene **200 filas y 121 columnas** de datos. Las sigu
 - 43: Subtema de acción climática
 - 44: Tipo de acción climática
 
+Una parte del procesamiento de este archivo se hizo con el programa LibreOffice Calc y otra parte mediante el lenguaje de programación R.
+
 #### Procedimiento para generar el archivo CSV
 - El archivo Excel se abrió en LibreOffice Calc.
 - Con la opción de menú **File | Save As...**, el archivo se guardó en formato CSV con el nombre `datos/proyectos.csv` (*Edit Filter Settings = Character set:Unicode(UTF-8) Field delimiter:, String delimiter:" Save content cell as shown*) (las versiones anteriores de este archivo están en `datos/bak/`).
-- Se eliminaron las tres primeras filas (incluyendo la que tiene los encabezados) y se guardó nuevamente el archivo.
+- Se eliminaron las tres primeras filas (estaban en blanco o sin información relevante) y se guardó nuevamente el archivo.
 - En la fila 10, columna 32; fila 133, columna 32 y fila 135, columna 32 se cambió una coma por un punto y se guardó nuevamente el archivo.
 
 Para asignar nombres temporales a las 121 columnas, se abrió con un editor de texto el archivo `datos/proyectos.csv` y se insertó al principio la línea:
 
 `c001,c002,c003,c004,c005,c006,c007,c008,c009,c010,c011,c012,c013,c014,c015,c016,c017,c018,c019,c020,c021,c022,c023,c024,c025,c026,c027,c028,c029,c030,c031,c032,c033,c034,c035,c036,c037,c038,c039,c040,c041,c042,c043,c044,c045,c046,c047,c048,c049,c050,c051,c052,c053,c054,c055,c056,c057,c058,c059,c060,c061,c062,c063,c064,c065,c066,c067,c068,c069,c070,c071,c072,c073,c074,c075,c076,c077,c078,c079,c080,c081,c082,c083,c084,c085,c086,c087,c088,c089,c090,c091,c092,c093,c094,c095,c096,c097,c098,c099,c100,c101,c102,c103,c104,c105,c106,c107,c108,c109,c110,c111,c112,c113,c114,c115,c116,c117,c118,c119,c120,c121`
-
-Las columnas seleccionadas para mostrarse en la aplicación fueron renombradas.
 
 #### Cambios realizados en el código R de la aplicación
 - Se renombraron las columnas cuyos datos se muestran en la aplicación.
@@ -89,7 +87,7 @@ ogr2ogr \
 ```
 
 ### regiones-socioeconomicas.geojson
-Es otra capa geoespacial generada a partir de la capa "Regiones_mideplan" publicada en el Atlas digital de Costa Rica 2014. Contiene la división de Costa Rica en las regiones socioeconómicas definidas por el Ministerio de Planificación (Mideplan). Fue necesario actualizar la capa de acuerdo con la [versión más reciente](https://documentos.mideplan.go.cr/share/s/eZ8HYuxgTl6xCHx3ZAEBrg).
+Es otra capa geoespacial generada a partir de la capa "Regiones_mideplan" publicada en el Atlas digital de Costa Rica 2014. Contiene la división de Costa Rica en las regiones definidas por el Ministerio de Planificación (Mideplan) para efectos de investigación y planificación del desarrollo socioeconómico. Fue necesario actualizar la capa de acuerdo con la [versión más reciente](https://documentos.mideplan.go.cr/share/s/eZ8HYuxgTl6xCHx3ZAEBrg), debido a que la del Atlas se encontraba desactualizada.
 
 ```shell
 cd datos
@@ -100,7 +98,7 @@ rm regiones-socioeconomicas-simplificadas_100m.geojson
 # Archivo temporal
 cp regiones-socioeconomicas-atlas2014/regiones_mideplan.* .
 
-# Reubicación de polígonos en regiones
+# Reubicación de polígonos en las regiones, de acuerdo con la versión más reciente
 ogrinfo -dialect sqlite -sql "UPDATE regiones_mideplan SET REGION = 'CENTRAL' WHERE REGION = 'CARTAGO' OR (REGION = 'HEREDIA' AND NCANTON <> 'SARAPIQUI')" regiones_mideplan.shp
 ogrinfo -dialect sqlite -sql "UPDATE regiones_mideplan SET REGION = 'HUETAR NORTE' WHERE NCANTON = 'SARAPIQUI'" regiones_mideplan.shp
 
