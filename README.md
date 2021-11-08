@@ -22,6 +22,8 @@ La interfaz permite visualizar, través de mapas y gráficos estadísticos, como
 
 La aplicación fue desarrollada con los paquetes [flexdasboard](https://pkgs.rstudio.com/flexdashboard/) y [Shiny](https://shiny.rstudio.com/) del lenguaje de programación [R](https://www.r-project.org/). Está alojada en la plataforma [shinyapps.io](https://www.shinyapps.io/) de [RStudio](https://www.rstudio.com/). El código fuente y la documentación están disponibles en [https://github.com/cartera-verde-dcc](https://github.com/cartera-verde-dcc).
 
+Seguidamente, se detalla el proceso de preparación de los datos de entrada que utiliza la aplicación.
+
 ## Procesamiento de los datos de entrada
 La aplicación recibe tres archivos de entrada:
 
