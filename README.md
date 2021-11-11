@@ -59,6 +59,7 @@ Una parte del procesamiento de este archivo se hizo con el programa LibreOffice 
 - Se eliminaron las tres primeras filas (estaban en blanco o sin información relevante) y se guardó nuevamente el archivo.
 - En la fila 10, columna 32; fila 133, columna 32 y fila 135, columna 32 se cambió una coma por un punto y se guardó nuevamente el archivo.
 - En la fila 10 (proyecto Yakukua) se corrigió el espaciado en la columna 41 (cantones).
+- Para Asofac, se cambiaron las coordenadas a (-82.935772, 8.957069).
 
 Para asignar nombres temporales a las 121 columnas, se abrió con un editor de texto el archivo `datos/proyectos.csv` y se insertó al principio la línea:
 
