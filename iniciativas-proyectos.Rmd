@@ -69,11 +69,15 @@ st_crs(proyectos) <- 4326
 # Selección y cambio de nombres de columnas de proyectos
 proyectos <-
   proyectos %>%
-  select(c005, c006, c007, c020, c031, c032, c040, c041, c042, c043, c044) %>%
+  select(c005, c006, c007, c009, c010, c020, c028, c029, c031, c032, c040, c041, c042, c043, c044) %>%
   rename(nombre = c005) %>%
   rename(tipo_actor = c006) %>%
   rename(cedula = c007) %>%
+  rename(telefono = c009) %>%
+  rename(email = c010) %>%
   rename(web = c020) %>%
+  rename(canton = c028) %>%
+  rename(distrito = c029) %>%
   rename(latitud = c031) %>%
   rename(longitud = c032) %>%
   rename(regiones = c040) %>%
@@ -190,6 +194,9 @@ lista_regiones <- sort(lista_regiones)
 lista_regiones <- c("Todas", lista_regiones)
 ```
 
+Resumen
+=======================================================================
+
 Filtros {.sidebar}
 -------------------------------------
 
@@ -233,7 +240,7 @@ selectInput(
 # Selector de cantón
 selectInput(
   inputId = "canton",
-  label = "Cantón",
+  label = "Cantón influenciado",
   choices = lista_cantones,
   selected = "Todos"
 )
@@ -241,7 +248,7 @@ selectInput(
 # Selector de región socioeconómica
 selectInput(
   inputId = "region",
-  label = "Región socioeconómica",
+  label = "Región socioeconómica influenciada",
   choices = lista_regiones,
   selected = "Todas"
 )
@@ -262,6 +269,25 @@ filtrarProyectos <- reactive({
     proyectos_filtrados <-
       proyectos_filtrados %>%
       filter(tema_ac == input$tema_ac)
+    
+    if (input$subtema_ac == "Todos") {
+      # HAY QUE ESTAR ATENTO PARA VER SI ESTE FILTRO DE SUBTEMAS FUNCIONA BIEN
+      # CON ESTE CÓDIGO UBICADO SOLO AQUÍ O SI DEBE COLOCARSE EN OTRAS PARTES
+      
+      # Lista ordenada de subtemas de acción climática + "Todos"
+      proyectos_tema_ac <- filter(proyectos, tema_ac == input$tema_ac)
+      lista_subtemas_ac <- unique(proyectos_tema_ac$subtema_ac)
+      lista_subtemas_ac <- sort(lista_subtemas_ac)
+      lista_subtemas_ac <- c("Todos", lista_subtemas_ac)
+      
+      updateSelectInput(
+        session,
+        "subtema_ac",
+        label = "Subtema de acción climática",
+        choices = lista_subtemas_ac,
+        selected = "Todos"
+      )
+    }
   }  
   
   # Filtrado por subtema de acción climática
@@ -570,12 +596,12 @@ filtrarRegiones <- reactive({
 })
 ```
 
-Row {data-height=700}
+Row {data-height=750}
 -----------------------------------------------------------------------
 
-### Cantones influenciados, regiones socioeconómicas influenciadas y oficinas centrales de las iniciativas y proyectos
+### Mapa de cantones influenciados, regiones socioeconómicas influenciadas y oficinas centrales de las iniciativas y proyectos
 
-```{r mapa}
+```{r mapa-resumen}
 renderLeaflet({
   proyectos <- filtrarProyectos()
   cantones <- filtrarCantones()
@@ -601,7 +627,7 @@ renderLeaflet({
       m %>%
       addPolygons(
         data = cantones,
-        group = "Cantones",
+        group = "Grado de influencia de iniciativas por cantón",
         color = "black",
         stroke = TRUE,
         weight = 1.0,
@@ -620,8 +646,8 @@ renderLeaflet({
         pal = pal_cantidad_proyectos_cantones,
         values = cantones$cantidad_proyectos,
         labFormat = labelFormat(digits = 0),
-        group = "Cantones",
-        title = "Iniciativas y proyectos en cantones"
+        group = "Grado de influencia de iniciativas por cantón",
+        title = "Grado de influencia de iniciativas por cantón"
       )
   }
   
@@ -630,7 +656,7 @@ renderLeaflet({
       m %>%
       addPolygons(
         data = regiones,
-        group = "Regiones socioeconómicas",
+        group = "Grado de influencia de iniciativas por región SE",
         color = "black",
         stroke = TRUE,
         weight = 1.0,
@@ -649,8 +675,8 @@ renderLeaflet({
         pal = pal_cantidad_proyectos_regiones,
         values = regiones$cantidad_proyectos,
         labFormat = labelFormat(digits = 0),
-        group = "Regiones socioeconómicas",
-        title = "Iniciativas y proyectos en regiones SE"
+        group = "Grado de influencia de iniciativas por región SE",
+        title = "Grado de influencia de iniciativas por región SE"
       )
   }
   
@@ -658,22 +684,34 @@ renderLeaflet({
     m %>%
     addCircleMarkers(
       data = proyectos,
-      group = "Oficinas centrales",
+      group = "Oficinas centrales de cada iniciativa o proyecto",
       fillColor = 'red',
       fillOpacity = 1,
       stroke = TRUE,
       radius = 4,
       popup = paste0(
-        "<strong>Proyecto: </strong>",
+        "<strong>Proyecto o iniciativa: </strong>",
         ifelse(
           proyectos$web == "N/A",
           proyectos$nombre,
-          paste0('<a href="', proyectos$web, '">', proyectos$nombre, "</a>")
+          paste0('<a target=_blank href="', proyectos$web, '">', proyectos$nombre, "</a>")
         ),
         "<br>",
         "<strong>Tipo de actor: </strong>",
         proyectos$tipo_actor,
         "<br>",
+        "<strong>Teléfono: </strong>",
+        proyectos$telefono,
+        "<br>",        
+        "<strong>Correo electrónico: </strong>",
+        proyectos$email,
+        "<br>",        
+        "<strong>Cantón de las oficinas centrales: </strong>",
+        proyectos$canton,
+        "<br>",        
+        "<strong>Distrito de las oficinas centrales: </strong>",
+        proyectos$distrito,
+        "<br>",        
         "<strong>Tema de acción climática: </strong>",
         proyectos$tema_ac,
         "<br>",
@@ -708,9 +746,9 @@ renderLeaflet({
         "Imágenes de ESRI"
       ),
       overlayGroups = c(
-        ifelse(input$region == "Todas", "Cantones", ""),
-        ifelse(input$canton == "Todos", "Regiones socioeconómicas", ""),
-        "Oficinas centrales"
+        ifelse(input$region == "Todas", "Grado de influencia de iniciativas por cantón", ""),
+        ifelse(input$canton == "Todos", "Grado de influencia de iniciativas por región SE", ""),
+        "Oficinas centrales de cada iniciativa o proyecto"
       )
     ) %>%
     addScaleBar(position = "bottomleft",
@@ -722,16 +760,16 @@ renderLeaflet({
   if (input$canton == "Todos" & input$region == "Todas") {
     m <-
       m %>%
-      hideGroup("Regiones socioeconómicas")
+      hideGroup("Grado de influencia de iniciativas por región SE")
   }
   
   m
 })
 ```
 
-### Iniciativas y proyectos
+### Tabla de iniciativas y proyectos
 
-```{r tabla-proyectos}
+```{r tabla-resumen}
 renderDT({
   proyectos <- filtrarProyectos()
   
@@ -767,12 +805,12 @@ renderDT({
 })  
 ```
 
-Row {data-height=300}
+Row {data-height=250}
 -----------------------------------------------------------------------
 
-### Cantidad de iniciativas y proyectos por cantón {data-width=600}
+### Gráfico del grado de influencia de iniciativas y proyectos por cantón {data-width=650}
 
-```{r grafico-proyectos_x_canton}
+```{r grafico-proyectos_x_canton-resumen}
 renderPlotly({
   if (input$region == "Todas") {
     cantones <- filtrarCantones()
@@ -780,7 +818,7 @@ renderPlotly({
     cantones %>%
       st_drop_geometry() %>%
       filter(cantidad_proyectos >= 1) %>%
-      top_n(n = 10, wt = cantidad_proyectos) %>%
+      top_n(n = 12, wt = cantidad_proyectos) %>%
       mutate(canton = factor(canton, levels = unique(canton)[order(cantidad_proyectos, decreasing = TRUE)])) %>%
       arrange(desc(cantidad_proyectos)) %>%
       plot_ly(
@@ -803,9 +841,9 @@ renderPlotly({
 })
 ```
 
-### Cantidad de iniciativas y proyectos por región socioeconómica {data-width=400}
+### Gráfico del grado de influencia de iniciativas y proyectos por región socioeconómica {data-width=350}
 
-```{r grafico-proyectos_x_region_socioeconomica}
+```{r grafico-proyectos_x_region_socioeconomica-resumen}
 renderPlotly({
   if (input$canton == "Todos") {
     regiones <- filtrarRegiones()
@@ -834,3 +872,314 @@ renderPlotly({
   }
 })
 ```
+
+
+Mapa
+=======================================================================
+
+### Mapa de cantones influenciados, regiones socioeconómicas influenciadas y oficinas centrales de las iniciativas y proyectos
+
+```{r mapa-detalle}
+renderLeaflet({
+  proyectos <- filtrarProyectos()
+  cantones <- filtrarCantones()
+  regiones <- filtrarRegiones()
+  
+  pal_cantidad_proyectos_cantones <-
+    colorNumeric(palette = "YlGnBu", domain = cantones$cantidad_proyectos)
+  pal_cantidad_proyectos_regiones <-
+    colorNumeric(palette = "YlOrRd", domain = regiones$cantidad_proyectos)
+  
+  m <-
+    leaflet() %>%
+    setView(lng = -83.79452, # el centro está en -84.19452
+            lat = 9.572735,
+            zoom = 8) %>%
+    addTiles(group = "OpenStreetMap") %>%
+    addProviderTiles(providers$Stamen.TonerLite, group = "Stamen Toner Lite") %>%
+    addProviderTiles(providers$CartoDB.DarkMatter, group = "CartoDB Dark Matter") %>%
+    addProviderTiles(providers$Esri.WorldImagery, group = "Imágenes de ESRI")
+  
+  if (input$region == "Todas") {
+    m <-
+      m %>%
+      addPolygons(
+        data = cantones,
+        group = "Grado de influencia de iniciativas por cantón",
+        color = "black",
+        stroke = TRUE,
+        weight = 1.0,
+        fillColor = ~ pal_cantidad_proyectos_cantones(cantidad_proyectos),
+        fillOpacity = 0.8,
+        popup = paste0(
+          "<strong>Cantón: </strong>",
+          cantones$canton,
+          "<br>",
+          "<strong>Cantidad de proyectos con influencia: </strong>",
+          cantones$cantidad_proyectos
+        )
+      ) %>%
+      addLegend(
+        position = "bottomright",
+        pal = pal_cantidad_proyectos_cantones,
+        values = cantones$cantidad_proyectos,
+        labFormat = labelFormat(digits = 0),
+        group = "Grado de influencia de iniciativas por cantón",
+        title = "Grado de influencia de iniciativas por cantón"
+      )
+  }
+  
+  if (input$canton == "Todos") {
+    m <-
+      m %>%
+      addPolygons(
+        data = regiones,
+        group = "Grado de influencia de iniciativas por región SE",
+        color = "black",
+        stroke = TRUE,
+        weight = 1.0,
+        fillColor = ~ pal_cantidad_proyectos_regiones(cantidad_proyectos),
+        fillOpacity = 0.8,
+        popup = paste0(
+          "<strong>Región SE: </strong>",
+          regiones$region,
+          "<br>",
+          "<strong>Cantidad de proyectos con influencia: </strong>",
+          regiones$cantidad_proyectos
+        )
+      ) %>%
+      addLegend(
+        position = "bottomleft",
+        pal = pal_cantidad_proyectos_regiones,
+        values = regiones$cantidad_proyectos,
+        labFormat = labelFormat(digits = 0),
+        group = "Grado de influencia de iniciativas por región SE",
+        title = "Grado de influencia de iniciativas por región SE"
+      )
+  }
+  
+  m <-
+    m %>%
+    addCircleMarkers(
+      data = proyectos,
+      group = "Oficinas centrales de cada iniciativa o proyecto",
+      fillColor = 'red',
+      fillOpacity = 1,
+      stroke = TRUE,
+      radius = 4,
+      popup = paste0(
+        "<strong>Proyecto o iniciativa: </strong>",
+        ifelse(
+          proyectos$web == "N/A",
+          proyectos$nombre,
+          paste0('<a href="', proyectos$web, '">', proyectos$nombre, "</a>")
+        ),
+        "<br>",
+        "<strong>Tipo de actor: </strong>",
+        proyectos$tipo_actor,
+        "<br>",
+        "<strong>Teléfono: </strong>",
+        proyectos$telefono,
+        "<br>",        
+        "<strong>Correo electrónico: </strong>",
+        proyectos$email,
+        "<br>",        
+        "<strong>Cantón de las oficinas centrales: </strong>",
+        proyectos$canton,
+        "<br>",        
+        "<strong>Distrito de las oficinas centrales: </strong>",
+        proyectos$distrito,
+        "<br>",        
+        "<strong>Tema de acción climática: </strong>",
+        proyectos$tema_ac,
+        "<br>",
+        "<strong>Subtema de acción climática: </strong>",
+        proyectos$subtema_ac,
+        "<br>",
+        "<strong>Tipo de acción climática: </strong>",
+        proyectos$tipo_ac,
+        ifelse(
+          proyectos$cantones != "",
+          paste0(
+            "<br><strong>Cantones influenciados: </strong>",
+            proyectos$cantones
+          ),
+          ""
+        ),
+        ifelse(
+          proyectos$regiones != "",
+          paste0(
+            "<br><strong>Regiones socioeconómicas influenciadas: </strong>",
+            proyectos$regiones
+          ),
+          ""
+        )
+      )
+    ) %>%
+    addLayersControl(
+      baseGroups = c(
+        "OpenStreetMap",
+        "Stamen Toner Lite",
+        "CartoDB Dark Matter",
+        "Imágenes de ESRI"
+      ),
+      overlayGroups = c(
+        ifelse(input$region == "Todas", "Grado de influencia de iniciativas por cantón", ""),
+        ifelse(input$canton == "Todos", "Grado de influencia de iniciativas por región SE", ""),
+        "Oficinas centrales de cada iniciativa o proyecto"
+      )
+    ) %>%
+    addScaleBar(position = "bottomleft",
+                options = scaleBarOptions(imperial = FALSE)) %>%
+    addMouseCoordinates() %>%
+    addSearchOSM() %>%
+    addResetMapButton()
+  
+  if (input$canton == "Todos" & input$region == "Todas") {
+    m <-
+      m %>%
+      hideGroup("Grado de influencia de iniciativas por región SE")
+  }
+  
+  m
+})
+```
+
+
+Tabla
+=======================================================================
+
+### Tabla de iniciativas y proyectos
+
+```{r tabla-detalle}
+renderDT({
+  proyectos <- filtrarProyectos()
+  
+  proyectos %>%
+    st_drop_geometry() %>%
+    select(
+      nombre,
+      tipo_actor,
+      web,
+      telefono,
+      email,
+      canton,
+      distrito,
+      tema_ac,
+      subtema_ac,
+      tipo_ac,
+      cantones,
+      regiones
+    ) %>%
+    datatable(
+      rownames = FALSE,
+      colnames = c(
+        "Iniciativa o proyecto",
+        "Tipo de actor",
+        "Sitio web",
+        "Teléfono",
+        "Correo",
+        "Cantón",
+        "Distrito",
+        "Tema de AC",
+        "Subtema de AC",
+        "Tipo de AC",
+        "Cantones influenciados",
+        "Regiones SE influenciadas"
+      ),
+      extensions = c("Buttons"),
+      options = list(
+        pageLength = 5,
+        searchHighlight = TRUE,
+        lengthMenu = list(c(5, 10, 15, 25, 50, 100, -1), c(5, 10, 15, 25, 50, 100, "Todos")),
+        dom = 'Bfrtlip',
+        language = list(url = "//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json"),
+        buttons = list(
+          list(extend = 'copy', text = 'Copiar'),
+          list(extend = 'csv', text = 'CSV'),
+          list(extend = 'csv', text = 'Excel'),
+          list(extend = 'pdf', text = 'PDF')
+        )
+      )
+    )
+})  
+```
+
+
+Gráficos
+=======================================================================
+
+Row {data-height=500}
+-----------------------------------------------------------------------
+
+### Gráfico del grado de influencia de iniciativas y proyectos por cantón
+
+```{r grafico-proyectos_x_canton-detalle}
+renderPlotly({
+  if (input$region == "Todas") {
+    cantones <- filtrarCantones()
+    
+    cantones %>%
+      st_drop_geometry() %>%
+      filter(cantidad_proyectos >= 1) %>%
+      top_n(n = 20, wt = cantidad_proyectos) %>%
+      mutate(canton = factor(canton, levels = unique(canton)[order(cantidad_proyectos, decreasing = TRUE)])) %>%
+      arrange(desc(cantidad_proyectos)) %>%
+      plot_ly(
+        x = ~ canton,
+        y = ~ cantidad_proyectos,
+        type = "bar",
+        name = "Proyectos",
+        text = ~ cantidad_proyectos,
+        textposition = 'auto',
+        marker = list(color = "#2c7fb8")
+      ) %>%
+      layout(
+        yaxis = list(title = "Cantidad de iniciativas y proyectos"),
+        xaxis = list(title = "Cantones"),
+        barmode = 'group',
+        hovermode = "compare"
+      ) %>%
+      config(locale = 'es')
+  }
+})
+```
+
+Row {data-height=500}
+-----------------------------------------------------------------------
+
+### Gráfico del grado de influencia de iniciativas y proyectos por región socioeconómica {data-width=400}
+
+```{r grafico-proyectos_x_region_socioeconomica-detalle}
+renderPlotly({
+  if (input$canton == "Todos") {
+    regiones <- filtrarRegiones()
+    
+    regiones %>%
+      st_drop_geometry() %>%
+      filter(cantidad_proyectos >= 1) %>%
+      mutate(region = factor(region, levels = unique(region)[order(cantidad_proyectos, decreasing = TRUE)])) %>%
+      arrange(desc(cantidad_proyectos)) %>%
+      plot_ly(
+        x = ~ region,
+        y = ~ cantidad_proyectos,
+        type = "bar",
+        name = "Proyectos",
+        text = ~ cantidad_proyectos,
+        textposition = 'auto',
+        marker = list(color = "#f03b20")
+      ) %>%
+      layout(
+        yaxis = list(title = "Cantidad de iniciativas y proyectos"),
+        xaxis = list(title = "Regiones socioeconómicas"),
+        barmode = 'group',
+        hovermode = "compare"
+      ) %>%
+      config(locale = 'es')
+  }
+})
+```
+
+
+Acerca de este sitio
+=======================================================================
