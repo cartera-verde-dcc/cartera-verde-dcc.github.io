@@ -1181,5 +1181,85 @@ renderPlotly({
 ```
 
 
-Acerca de este sitio
+Metodología
 =======================================================================
+
+```{r texto-metodologia}
+h1("Metodología de la cartera verde", style = "font-family: 'Georgia'; padding: 8px 40px;")
+
+p("En julio del 2021, la organización Sostenible Por Naturaleza S.A. fue contratada para identificar y analizar una Cartera Verde de Proyectos Financiables alineados a las ambiciones climáticas de Costa Rica y que apoyen el logro de las metas plasmadas en la Contribución Nacionalmente Determinada (NDC) de Costa Rica actualizada en diciembre 2020. El equipo profesional incluyó una especialista en gestión de proyectos, un especialista en cambio climático, una economista especializada en banca, una especialista en género y poblaciones históricamente excluidas y un especialista en SIG para el diseño del mapa interactivo en línea.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("El equipo consultor realizó cuatro sesiones de revisión y análisis de los tres instrumentos de política climática en los que se enmarca la consultoría: La Política Nacional de Adaptación 2018-2030, el Plan Nacional de Descarbonización 2018-2050 y la NDC 2020. El objetivo principal de estas sesiones fue generar un acuerdo en cuanto a la forma en que se explicaría a los entrevistados de manera coloquial el propósito de estas políticas, así como las potenciales formas en que las iniciativas y proyectos generaban contribuciones en línea con ellas.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("Se realizaron además cinco sesiones para definir las variables a considerar y posteriormente la formulación de las preguntas que permitirían capturar la información pertinente. Es importante destacar que cada uno de los expertos tuvo a cargo la formulación de las preguntas asociadas a temas específicos económicos y financieros, de cambio climático o para la inclusión de poblaciones históricamente excluidas.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("Se diseñó y diseminó una “Convocatoria Cartera Verde Proyectos Financiables” abierta para personas interesadas en incorporarse en la base de datos, con un link para completar un formulario preliminar. La invitación a la convocatoria salió de la Dirección de Cambio Climático. Se recibieron 106 solicitudes, de las que se concretaron 94 entrevistas.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("Adicionalmente, las personas especialistas del equipo identificaron y contactaron grupos y entidades que trabajan con poblaciones históricamente excluidas, con sectores productivos relevantes como agricultura, turismo, conservación y otros. De esa manera fue posible distribuir la información del proceso y solicitar recomendaciones de iniciativas que pudieran ser entrevistadas. Se estima que fueron contactados cerca de 300 actores por parte de las personas especialistas y se logró realizar entrevistas con cerca de 1/3 de ellas. Los contactos se hicieron por correo electrónico, mensajes de WhatsApp, mensajes de Messenger, y otros medios.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("Las entrevistas tuvieron lugar entre el 6 de septiembre y el 6 de octubre de 2021 y tomaron entre 45 minutos y una hora. Estas se realizaron por llamada telefónica, llamada por WhatsApp, video llamada por diferentes plataformas como Zoom y excepcionalmente en forma presencial, dado el contexto de pandemia generado por el COVID-19. Cada persona especialista entrevistó cerca de 50 informantes de relevancia, para un total de 200 incluidos en la base de datos.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("Como lineamientos específicos se acordó que, luego del saludo, se explicaría a la persona entrevistada el propósito y alcance de la Cartera de Proyectos Verdes alineados con la NDC, así como la indicación de que estaba en completa libertad de no responder a cualquier pregunta que le resultara incómoda o por cualquier otra razón, sin tener que ofrecer ninguna explicación. Esto es un protocolo internacional de respeto a las personas informantes en proceso de investigación clínica, social, o de otro tipo. Se acordó también que, una vez concluida la entrevista, se agradecería el tiempo y la disponibilidad.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("Las personas integrantes del equipo consultor capturaron la información por medio de un formulario en línea utilizando Google Forms. Para cada persona entrevistada se abrió un formulario nuevo, lo que permitió la captura de datos e información de cada proyecto, acción o iniciativa. Una vez completado ese proceso, se generó un documento Excel que integra la base de datos completa con la información generada de todas las iniciativas entrevistas.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("En relación al mapa con el especialista en cambio climático y el especialista en SIG determinaron las características del mismo, que incluye un visor geoespacial que despliega la información de los proyectos e iniciativas de manera ordenada y permite filtrar los proyectos a partir de una serie de criterios básicos.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+```
+
+Filtro de datos
+=======================================================================
+
+```{r texto-filtrodatos}
+h1("Filtro de datos", style = "font-family: 'Georgia'; padding: 8px 40px;")
+
+p("El mapa de iniciativas y proyectos climáticos cuenta con un buscador que le permite al usuario realizar búsquedas, seleccionando los criterios con los que se desean filtrar esos datos. A continuación, se explican las categorías incluidas.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+h3("Tipo de actor", style = "font-family: 'Georgia'; padding: 8px 40px;")
+
+p("Los actores incluidos en la base de datos se clasifican en las siguientes categorías, por orden alfabético: 1) Micros, Pequeñas y Medianas Empresas (MIPYMES) que operan bajo la figura de persona jurídica, Municipalidades, Organizaciones de base Comunitaria (ObC) como asociaciones y cooperativas locales), Organizaciones No Gubernamentales (ONG), personas físicas (muchas de las cuales también son MIPYMES que operan bajo cédula física) y personas físicas o jurídicas formalmente registradas en el MAG como Pequeños y Medianos Productores Agropecuarios (PYMPAS).", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+h3("Tema de acción climática", style = "font-family: 'Georgia'; padding: 8px 40px;")
+
+p("Cada iniciativa y proyecto se ha clasificado por tema de acción climática, según su actividad principal, por orden alfabético:", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("1) agropecuario y pesca, 2) bosques y biodiversidad terrestre, 3) comercio y servicios, 4) energía, 5) gestión de residuos, 6) industria, 7) infraestructura y construcción, 8) ordenamiento territorial, 9) recurso hídrico, 10) transporte, 11) transversal y 12) turismo.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+h3("Subtema de acción climática", style = "font-family: 'Georgia'; padding: 8px 40px;")
+
+p("Estas listas son dependientes de los temas en la lista anterior. Cada tema se divide en uno o varios subtemas, según su naturaleza o actividad, por ejemplo:", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("Transversal: 1) educación, capacitación y empoderamiento climático, 2) financiamiento y herramientas de mercado, 3) investigación, 4) planificación y gobernanza.
+Turismo:  1) gastronomía, 2) hospedaje, 3)  parque temático, 4) tour operación.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+h3("Tipo de acción climática", style = "font-family: 'Georgia'; padding: 8px 40px;")
+
+p("Las iniciativas y proyectos identificados se clasificaron como de mitigación, de adaptación, o de mitigación y adaptación. Es importante destacar que al hacer el cruce con los instrumentos de planificación, proyectos clasificados como de adaptación también aplicaron para algunos ejes del Plan Nacional de Descarbonización. Asimismo, proyectos clasificados como de mitigación aplicaron para algunos ejes de la Política Nacional de Adaptación. Esto pareciera indicar que una iniciativa originalmente concebida para descarbonización también puede generar adaptación y vice-versa.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+h3("Cantón influenciado", style = "font-family: 'Georgia'; padding: 8px 40px;")
+
+p("Es importante tomar en cuenta que, cuando se selecciona un cantón, lo que se muestra es el grado de influencia de iniciativas por cantón, no el número de iniciativas que tienen su sede u oficina establecidas en dicho cantón. Por ejemplo, la Asociación Dejando Huella tiene su sede en el cantón de Santa Ana, pero desarrolla sus actividades con comunidades urbano marginales del cantón de San José, así como con comunidades rurales de los cantones de Golfito, Limón, Matina, Siquirres y Pococí.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+h3("Región socioeconómica influenciada (regiones de MIDEPLAN)", style = "font-family: 'Georgia'; padding: 8px 40px;")
+
+p("Al igual que en el rubro anterior, lo que se muestra es el grado de influencia de iniciativas por región, no el número de iniciativas que tienen su sede u oficina establecidas en dicha región.", style = "font-family: 'Georgia'; font-size: large; padding: 0px 40px 5px 40px;")
+```
+
+Cartera de Proyectos Verdes
+=======================================================================
+
+```{r texto-carteraverde}
+h1("Cartera de Proyectos Verdes alineados con la NDC", style = "font-family: 'Georgia'; padding: 8px 40px;")
+
+p("El Proyecto NDC Support Programme del PNUD, tiene como propósito desarrollar actividades que fortalezcan el proceso de implementación de la NDC de Costa Rica con un enfoque más social y género responsivo. Además, continúa el apoyo para implementar el marco de transparencia del Acuerdo de París, a través del Sistema Nacional de Métrica de Cambio Climático (SINAMECC).", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("Asimismo, en el marco del Plan de inversiones del Plan Nacional de Descarbonización, se debe tener mayor claridad en las inversiones y necesidades de fortalecimiento institucional que deberá realizar el país para alcanzar las metas a corto, mediano y largo plazo. Dentro de este marco, el proyecto apoya al país en la definición de áreas claves de inversión de acuerdo a este proceso. Por otro lado, la Contribución Nacionalmente Determinada 2020 compromete a Costa Rica a tomar acciones alineadas con una trayectoria consistente con la meta global de limitar el aumento de la temperatura media mundial a 1.5 °C. Se espera que las acciones resultantes de las contribuciones planteadas aumenten la capacidad de adaptación del país, fortalezcan la resiliencia y reduzcan su vulnerabilidad al cambio climático.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("Es por esto que la identificación de posibles proyectos alineados a las ambiciones climáticas del país es clave para la implementación de la agenda climática y lograrlo a través de una transición justa. Asimismo, es de suma importancia para la toma de decisiones conocer los encadenamientos productivos y los beneficios socioeconómicos de dichos proyectos, para apoyar la transición a una economía verde.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("Es bajo este marco que durante el segundo semestre del 2021, el PNUD y la Dirección de Cambio Climático solicitaron la asesoría técnica de un equipo consultor para la creación de una “Cartera de Proyectos Verdes alineados con la NDC de Costa Rica”.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("La misma está constituida por una base de datos que reúne proyectos e iniciativas financiables que reflejan un espectro amplio de actividades productivas y de conservación relacionadas con el cambio climático y que contribuyen con el desarrollo sostenible de Costa Rica. Se incluyen proyectos e iniciativas de MIPYMES, Organizaciones de base -Comunitaria (ObC), ONG, municipalidades, y otras. Los proyectos e iniciativas son de origen privado y/o ciudadanas. La cartera tiene una cobertura nacional por regiones de MIDEPLAN, con representación tanto urbana como rural.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p('La “Cartera de Proyectos Verdes alineados con la NDC" está acompañada por un análisis de mecanismos y fuentes de financiamiento disponibles que permitan su ejecución.  El fin es identificar las condiciones de las empresas, proyectos y personas encuestadas que atienden la gestión de recursos naturales y que enfrentan los impactos del cambio climático, en el contexto de las oportunidades de acceso al financiamiento.', style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
+
+p("La cartera también viene acompañada de un análisis transversal desde la perspectiva de los derechos humanos y de género, de manera que las personas, desde su diversidad, puedan beneficiarse de las políticas y programas económicos y sociales que apoyan los procesos de descarbonización y de adaptación al cambio climático.", style = "font-family: 'Georgia'; font-size: large; padding: 2px 40px;")
